@@ -337,6 +337,12 @@
       <ul id="tvIdList"></ul>
     </div>
   </div>
+    <!-- ✅ New Episode Navigation Buttons -->
+  <div class="input-container" style="justify-content: center; margin-top: 15px;">
+    <button onclick="previousEpisode()">⏮ Previous Episode</button>
+    <button onclick="nextEpisode()">⏭ Next Episode</button>
+  </div>
+</div>
 
   <!-- Search Tab -->
   <div id="search" class="container" style="display: none;">
@@ -484,6 +490,23 @@
         updateIdList("tvIdList", tvIdSet);
       }
     }
+    function nextEpisode() {
+  const episodeInput = document.getElementById("episodeNumber");
+  let current = parseInt(episodeInput.value) || 1;
+  episodeInput.value = current + 1;
+  playTvShow();
+}
+
+function previousEpisode() {
+  const episodeInput = document.getElementById("episodeNumber");
+  let current = parseInt(episodeInput.value) || 1;
+  if (current > 1) {
+    episodeInput.value = current - 1;
+    playTvShow();
+  } else {
+    alert("You're already on Episode 1!");
+  }
+}
   </script>
 </body>
 </html>
