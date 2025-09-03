@@ -165,6 +165,30 @@
       font-weight: bold;
       box-shadow: 0 0 20px rgba(0,229,255,0.7);
     }
+      .logged-ids {
+  margin-top: 12px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: #102c4ccc; /* semi-transparent dark blue */
+  border: 2px solid #3a7bd5cc; /* medium blue border */
+  max-height: 140px;
+  overflow-y: auto;
+  user-select: none;
+}
+.logged-ids h3 {
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  color: #7da8f7; /* lighter blue text */
+  text-shadow: 0 0 6px #adc8ff; /* soft blue glow */
+}
+.logged-ids ul {
+  padding-left: 20px;
+  margin: 0;
+  list-style-type: decimal;
+  color: #c6d7ff; /* pale blue text */
+  font-size: 15px;
+  line-height: 1.38;
+}
   </style>
 </head>
 <body>
@@ -190,6 +214,9 @@
       <button onclick="playMovie()">▶ Play Movie</button>
     </div>
     <iframe id="moviePlayer" src="" allowfullscreen></iframe>
+     <div class="logged-ids" id="movieLog">
+      <h3>Logged Movie TMDB IDs</h3>
+      <ul id="movieIdList"></ul>
   </div>
 
   <!-- TV Shows Tab -->
@@ -209,6 +236,9 @@
       <button onclick="playTvShow()">▶ Play TV Show</button>
     </div>
     <iframe id="tvPlayer" src="" allowfullscreen></iframe>
+     <div class="logged-ids" id="movieLog">
+      <h3>Logged Movie TMDB IDs</h3>
+      <ul id="movieIdList"></ul>
   </div>
 
   <!-- Search Tab -->
@@ -222,6 +252,20 @@
 
   <script>
     const apiKey = 'a24c4f9e8a288d266b2453d737f19f54'; 
+
+      const movieIdSet = new Set();
+    const tvIdSet = new Set();
+
+    // Function to update list display
+    function updateIdList(logId, idSet) {
+      const list = document.getElementById(logId);
+      list.innerHTML = '';
+      idSet.forEach(id => {
+        const li = document.createElement('li');
+        li.textContent = id;
+        list.appendChild(li);
+      });
+    }
 
     function showTab(tab) {
       const movies = document.getElementById('movies');
