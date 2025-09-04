@@ -318,12 +318,13 @@
       const provider = document.getElementById("movieProvider").value;
       let url = "";
       switch (provider) {
-        case "frembed": url = `https://vidsrc.xyz/embed/movie/${mediaId}`; break;
+        case "frembed": url = `https://vidsrc.xyz/embed/movie/tt${mediaId}`; break;
         case "superembed": url = `https://embed.su/embed/movie/${mediaId}`; break;
-        case "smashystream": url = `https://vidsrc.net/embed/movie/${mediaId}`; break;
-        case "autoembed": url = `https://vidsrc.in/embed/movie/${mediaId}`; break;
+        case "smashystream": url = `https://vidsrc.net/embed/movie/tt${mediaId}`; break;
+        case "autoembed": url = `https://vidsrc.in/embed/movie/tt${mediaId}`; break;
         case "upcloud": url = `https://vidsrc.cc/embed/movie/${mediaId}`; break;
         case "vidsrc": url = `https://vidsrc.to/embed/movie/${mediaId}`; break;
+    
       }
       document.getElementById("moviePlayer").src = url;
 
