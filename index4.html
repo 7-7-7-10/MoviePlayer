@@ -374,58 +374,7 @@ toggleSeasonEpisodeInputs();
       });
     }
 
-    // Cloak launch: converts TMDb ID to IMDb ID if necessary, then opens embed in new tab
-   async function launchCloak() {
-  const idType = document.getElementById("idType").value;
-  const inputId = document.getElementById("cloakMediaId").value.trim();
-  if (!inputId) {
-    return alert("Please enter an ID.");
-  }
-  const provider = document.getElementById("cloakProvider").value;
-  try {
-    let imdbId = inputId;
-    if (idType === "tmdb") {
-      // Convert TMDb ID to IMDb ID using TMDb API "external_ids"
-      const response = await fetch(`https://api.themoviedb.org/3/movie/${inputId}?api_key=${apiKey}&append_to_response=external_ids`);
-      if (!response.ok) throw new Error("Invalid TMDb ID or API error");
-      const data = await response.json();
-      if (!data.external_ids || !data.external_ids.imdb_id) throw new Error("IMDb ID not found for this TMDb ID");
-      imdbId = data.external_ids.imdb_id.replace(/^tt/, ''); // remove 'tt' prefix for embed URLs
-    } else {
-      // If IMDb ID entered, strip 'tt' if present
-      imdbId = inputId.replace(/^tt/, '');
-    }
-    // Construct the embed URL based on provider
-    let url = "";
-    switch (provider) {
-      case "frembed": url = `https://vidsrc.xyz/embed/movie?imdb=${imdbId}`; break;
-      case "superembed": url = `https://embed.su/embed/movie/${imdbId}`; break;
-      case "smashystream": url = `https://vidsrc.net/embed/movie?imdb=${imdbId}`; break;
-      case "autoembed": url = `https://vidsrc.in/embed/movie/${imdbId}`; break;
-      case "upcloud": url = `https://vidsrc.cc/embed/movie/${imdbId}`; break;
-      case "vidsrc": url = `https://vidsrc.to/embed/movie/${imdbId}`; break;
-    }
-    // Open about:blank window
-    const win = window.open('about:blank');
-    // Setup blank page with iframe for embed URL
-    win.document.write(`
-      <html>
-        <head>
-          <title>Video Player</title>
-          <style>
-            body,html { margin:0; height:100%; overflow:hidden; background:#000; }
-            iframe { border:none; width:100%; height:100%; }
-          </style>
-        </head>
-        <body>
-          <iframe src="${url}" allowfullscreen></iframe>
-        </body>
-      </html>
-    `);
-    win.document.close();
-  }
   
-}
 
   </script>
 </body>
