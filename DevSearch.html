@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title id="main-title">Phoenix | ZXS MOVIE LAUNCHER</title>
+  <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/616/616494.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1a0a00, #3d1a00 40%, #ff9100 100%);
+      color: #fff3e0;
+      overflow-x: hidden;
+      transition: background 0.3s;
+    }
+    body.theme-orange {
+      background: linear-gradient(135deg, #1a0a00, #3d1a00 40%, #ff9100 100%);
+      color: #fff3e0;
+    }
+    body.theme-blue {
+      background: linear-gradient(135deg, #0a1a2a, #1a3d5c 40%, #2196f3 100%);
+      color: #e3f2fd;
+    }
+    body.theme-red {
+      background: linear-gradient(135deg, #2a0a0a, #5c1a1a 40%, #e53935 100%);
+      color: #ffebee;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: linear-gradient(90deg, rgba(255,140,0,0.09) 1px, transparent 1px),
+                        linear-gradient(180deg, rgba(255,140,0,0.09) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      animation: moveGrid 20s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes moveGrid {
+      from { transform: translate(0,0); }
+      to { transform: translate(-50px,-50px); }
+    }
+    h1 {
+      text-align: center;
+      margin: 28px 0 10px 0;
+      font-size: 3.7rem;
+      color: #ff9100;
+      text-shadow: 0 0 24px #ff6f00, 0 0 50px #ff3d00;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 2px;
+      animation: fadeFire 2s;
+      transition: color 0.3s;
+    }
+    body.theme-blue h1 {
+      color: #2196f3;
+      text-shadow: 0 0 24px #1976d2, 0 0 50px #1565c0;
+    }
+    body.theme-red h1 {
+      color: #e53935;
+      text-shadow: 0 0 24px #b71c1c, 0 0 50px #ff1744;
+    }
+    @keyframes fadeFire {
+      0% { color: #000; text-shadow: 0 0 0 #000;}
+      100% { color: #ff9100; text-shadow: 0 0 24px #ff6f00, 0 0 50px #ff3d00;}
+    }
+    .catchphrase {
+      text-align: center;
+      font-size: 1.35rem;
+      margin-bottom: 16px;
+      font-weight: 700;
+      color: #ffd180;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #ff6f00;
+      animation: fadeFire 2.5s;
+      transition: color 0.3s;
+    }
+    body.theme-blue .catchphrase { color: #90caf9; text-shadow: 0 0 8px #2196f3; }
+    body.theme-red .catchphrase { color: #ffcdd2; text-shadow: 0 0 8px #e53935; }
+    .container {
+      max-width: 850px;
+      margin: 30px auto;
+      padding: 35px;
+      border: 2px solid #ff9100;
+      border-radius: 20px;
+      background: rgba(40, 20, 0, 0.92);
+      box-shadow: 0 0 50px #ff6f00;
+      position: relative;
+      z-index: 1;
+      transition: all 0.4s ease;
+      animation: borderFade 2s;
+    }
+    body.theme-blue .container {
+      border-color: #2196f3;
+      background: rgba(10, 30, 60, 0.92);
+      box-shadow: 0 0 50px #2196f3;
+    }
+    body.theme-red .container {
+      border-color: #e53935;
+      background: rgba(60, 10, 10, 0.92);
+      box-shadow: 0 0 50px #e53935;
+    }
+    @keyframes borderFade {
+      0% { border-color: #000; }
+      100% { border-color: #ff9100; }
+    }
+    .container:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 60px #ff3d00;
+    }
+    body.theme-blue .container:hover {
+      box-shadow: 0 0 60px #1976d2;
+    }
+    body.theme-red .container:hover {
+      box-shadow: 0 0 60px #ff1744;
+    }
+    .input-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 25px;
+      justify-content: center;
+    }
+    input, select, button {
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      background: rgba(60,30,0,0.95);
+      color: #ff9100;
+      border: 2px solid #ff6f00;
+      transition: all 0.4s ease;
+      flex: 1;
+      box-shadow: 0 0 10px #ff910030;
+      animation: borderFade 1.5s;
+    }
+    body.theme-blue input, body.theme-blue select, body.theme-blue button {
+      background: rgba(10,30,60,0.95);
+      color: #2196f3;
+      border: 2px solid #1976d2;
+      box-shadow: 0 0 10px #2196f330;
+    }
+    body.theme-red input, body.theme-red select, body.theme-red button {
+      background: rgba(60,10,10,0.95);
+      color: #e53935;
+      border: 2px solid #b71c1c;
+      box-shadow: 0 0 10px #e5393530;
+    }
+    input:focus, select:focus {
+      outline: none;
+      background: #2b1700;
+      box-shadow: 0 0 15px #ff9100;
+      border-color: #ff3d00;
+    }
+    button {
+      background: linear-gradient(135deg, #ff9100 30%, #ff3d00 100%);
+      border: none;
+      color: #fffbe6;
+      font-weight: bold;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 15px #ff6f00a0;
+      animation: borderFade 1.5s;
+    }
+    body.theme-blue button {
+      background: linear-gradient(135deg, #2196f3 30%, #1565c0 100%);
+      color: #e3f2fd;
+      box-shadow: 0 0 15px #1976d2a0;
+    }
+    body.theme-red button {
+      background: linear-gradient(135deg, #e53935 30%, #b71c1c 100%);
+      color: #ffebee;
+      box-shadow: 0 0 15px #b71c1ca0;
+    }
+    button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 28px #ff3d00;
+      background: linear-gradient(135deg, #ff3d00 0%, #ff9100 100%);
+      color: #fff;
+      border: 2px solid #ff3d00;
+    }
+    body.theme-blue button:hover {
+      box-shadow: 0 0 28px #1565c0;
+      background: linear-gradient(135deg, #1565c0 0%, #2196f3 100%);
+      border: 2px solid #1976d2;
+      color: #fff;
+    }
+    body.theme-red button:hover {
+      box-shadow: 0 0 28px #ff1744;
+      background: linear-gradient(135deg, #b71c1c 0%, #e53935 100%);
+      border: 2px solid #b71c1c;
+      color: #fff;
+    }
+    .search-results {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      justify-content: center;
+    }
+    .search-item {
+      background: rgba(50,22,0,0.9);
+      border: 2px solid #ff9100;
+      border-radius: 12px;
+      padding: 22px;
+      width: 320px;
+      transition: all 0.4s;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      animation: borderFade 2.2s;
+    }
+    body.theme-blue .search-item {
+      background: rgba(10,30,60,0.9);
+      border-color: #2196f3;
+    }
+    body.theme-red .search-item {
+      background: rgba(60,10,10,0.9);
+      border-color: #e53935;
+    }
+    .search-item:hover {
+      transform: scale(1.045);
+      background: linear-gradient(135deg, #ff9100, #ff3d00);
+      color: #fffbe6;
+      font-weight: bold;
+      box-shadow: 0 0 28px #ff6f00a0;
+      border-color: #ff3d00;
+    }
+    body.theme-blue .search-item:hover {
+      background: linear-gradient(135deg, #2196f3, #1565c0);
+      box-shadow: 0 0 28px #2196f3a0;
+      border-color: #1565c0;
+      color: #fffbe6;
+    }
+    body.theme-red .search-item:hover {
+      background: linear-gradient(135deg, #e53935, #b71c1c);
+      box-shadow: 0 0 28px #e53935a0;
+      border-color: #b71c1c;
+      color: #fffbe6;
+    }
+    .search-title {
+      font-size: 1.35rem;
+      color: #ff9100;
+      margin: 9px 0 5px 0;
+      font-weight: 700;
+      text-shadow: 0 0 6px #ff3d00;
+      animation: fadeFire 1.5s;
+      transition: color 0.3s;
+    }
+    body.theme-blue .search-title { color: #2196f3; text-shadow: 0 0 6px #1565c0; }
+    body.theme-red .search-title { color: #e53935; text-shadow: 0 0 6px #b71c1c; }
+    .search-type {
+      font-size: 1.05rem;
+      color: #ff6f00;
+      margin-bottom: 6px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    body.theme-blue .search-type { color: #1565c0; }
+    body.theme-red .search-type { color: #b71c1c; }
+    .id-info {
+      margin: 8px 0 0 0;
+      font-size: 0.98rem;
+      color: #ffab40;
+      background: rgba(255,145,0,0.09);
+      border-radius: 7px;
+      padding: 6px 12px;
+      word-break: break-all;
+      width: 100%;
+      text-align: left;
+      box-sizing: border-box;
+      transition: color 0.3s, background 0.3s;
+    }
+    body.theme-blue .id-info {
+      color: #90caf9;
+      background: rgba(33,150,243,0.09);
+    }
+    body.theme-red .id-info {
+      color: #ffcdd2;
+      background: rgba(229,57,53,0.09);
+    }
+    .theme-switcher {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .theme-btn {
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .theme-btn.orange { background: #ff9100; color: #fff;}
+    .theme-btn.blue { background: #2196f3; color: #fff;}
+    .theme-btn.red { background: #e53935; color: #fff;}
+    .theme-btn.active { outline: 2px solid #fffbe6; }
+    .recent-searches-block {
+      margin-bottom: 18px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 14px 22px;
+      box-shadow: 0 0 18px #ff910050;
+      text-align: center;
+      transition: background 0.3s, color 0.3s;
+    }
+    .recent-title {
+      font-size: 1.19rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #ff9100;
+    }
+    body.theme-blue .recent-title { color: #2196f3; }
+    body.theme-red .recent-title { color: #e53935; }
+    .recent-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 4px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .recent-list li {
+      background: rgba(255,145,0,0.11);
+      color: #ff9100;
+      border-radius: 7px;
+      padding: 5px 12px;
+      cursor: pointer;
+      border: none;
+      font-size: 0.99rem;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.theme-blue .recent-list li {
+      background: rgba(33,150,243,0.11); color: #2196f3;
+    }
+    body.theme-red .recent-list li {
+      background: rgba(229,57,53,0.11); color: #e53935;
+    }
+    .recent-list li:hover {
+      background: #ff9100; color: #fff;
+    }
+    body.theme-blue .recent-list li:hover {
+      background: #2196f3; color: #fff;
+    }
+    body.theme-red .recent-list li:hover {
+      background: #e53935; color: #fff;
+    }
+    .last-playing-block {
+      margin-bottom: 18px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 14px 22px;
+      box-shadow: 0 0 18px #ff910050;
+      text-align: center;
+      transition: background 0.3s, color 0.3s;
+      font-size: 1.07rem;
+    }
+    .last-playing-title {
+      font-weight: bold;
+      color: #ff9100;
+      margin-right: 8px;
+    }
+    body.theme-blue .last-playing-title { color: #2196f3; }
+    body.theme-red .last-playing-title { color: #e53935; }
+    #playerModal {
+      display: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(40, 20, 0, 0.90);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    #playerModal.show {
+      display: flex;
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    #playerFrame {
+      width: 90vw;
+      max-width: 900px;
+      height: 70vh;
+      border: 4px solid #ff9100;
+      border-radius: 18px;
+      background: #000;
+      box-shadow: 0 0 40px #ff6f00;
+      animation: borderFade 2s;
+    }
+    body.theme-blue #playerFrame {
+      border-color: #2196f3; box-shadow: 0 0 40px #2196f3;
+    }
+    body.theme-red #playerFrame {
+      border-color: #e53935; box-shadow: 0 0 40px #e53935;
+    }
+    #closeBtn {
+      margin: 20px 0 0 0;
+      padding: 10px 30px;
+      border-radius: 40px;
+      border: none;
+      background: linear-gradient(135deg, #ff9100, #ff3d00);
+      color: #fffbe6;
+      font-weight: bold;
+      font-size: 1.18rem;
+      box-shadow: 0 0 20px #ff6f00a0;
+      cursor: pointer;
+      transition: all 0.4s;
+      animation: borderFade 1.5s;
+    }
+    body.theme-blue #closeBtn {
+      background: linear-gradient(135deg, #2196f3, #1565c0);
+      color: #e3f2fd;
+      box-shadow: 0 0 20px #2196f3a0;
+    }
+    body.theme-red #closeBtn {
+      background: linear-gradient(135deg, #e53935, #b71c1c);
+      color: #ffebee;
+      box-shadow: 0 0 20px #b71c1ca0;
+    }
+    #closeBtn:hover {
+      background: linear-gradient(135deg, #ff3d00, #ff9100);
+      color: #fff;
+    }
+    body.theme-blue #closeBtn:hover {
+      background: linear-gradient(135deg, #1565c0, #2196f3);
+      color: #fff;
+    }
+    body.theme-red #closeBtn:hover {
+      background: linear-gradient(135deg, #b71c1c, #e53935);
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="theme-orange">
+  <h1 id="main-header">🔥 Phoenix</h1>
+  <div class="catchphrase">Unblocked. — Unstoppable. — Unbreakable.</div>
+  <div class="container">
+    <div class="theme-switcher">
+      <span style="font-weight:bold;">Theme:</span>
+      <button class="theme-btn orange active" onclick="setTheme('orange')">Orange</button>
+      <button class="theme-btn blue" onclick="setTheme('blue')">Blue</button>
+      <button class="theme-btn red" onclick="setTheme('red')">Red</button>
+    </div>
+    <div id="lastPlayingBlock" class="last-playing-block" style="display:none;"></div>
+    <div id="recentSearchesBlock" class="recent-searches-block" style="display:none;"></div>
+    <div class="input-container">
+      <input id="searchQuery" type="text" placeholder="Search by title..." />
+      <button onclick="performSearch()">Search</button>
+    </div>
+    <div id="results" class="search-results"></div>
+  </div>
+  <!-- Modal Player -->
+  <div id="playerModal">
+    <iframe id="playerFrame" allowfullscreen frameborder="0"></iframe>
+    <button id="closeBtn" onclick="closeModal()">✕ Close</button>
+  </div>
+<script>
+  let moviedb = [];
+  let tvdb = [];
+  let databasesLoaded = false;
+
+  // THEME SWITCHER LOGIC
+  function setTheme(theme) {
+    document.body.className = 'theme-' + theme;
+    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector('.theme-btn.' + theme).classList.add('active');
+    if (theme === 'blue') {
+      document.getElementById('main-title').textContent = 'ION';
+      document.getElementById('main-header').textContent = 'ION';
+    } else {
+      document.getElementById('main-title').textContent = 'Phoenix | ZXS MOVIE LAUNCHER';
+      document.getElementById('main-header').textContent = '🔥 Phoenix';
+    }
+  }
+
+  // RECENT SEARCHES
+  function getRecentSearches() {
+    return JSON.parse(localStorage.getItem('recentSearches') || '[]');
+  }
+  function saveRecentSearch(query) {
+    if (!query || !query.trim()) return;
+    let recent = getRecentSearches();
+    recent = recent.filter(x => x !== query); // Remove duplicates
+    recent.unshift(query);
+    if (recent.length > 10) recent.pop();
+    localStorage.setItem('recentSearches', JSON.stringify(recent));
+  }
+  function updateRecentSearchesBlock() {
+    const query = document.getElementById('searchQuery').value.trim();
+    const block = document.getElementById('recentSearchesBlock');
+    const recent = getRecentSearches();
+    if (!query && recent.length) {
+      block.style.display = "";
+      let html = `<div class="recent-title">Recent Searches</div><ul class="recent-list">`;
+      for (const r of recent) {
+        html += `<li onclick="useRecentSearch('${encodeURIComponent(r)}')">${r}</li>`;
+      }
+      html += "</ul>";
+      block.innerHTML = html;
+    } else {
+      block.style.display = "none";
+    }
+  }
+  function useRecentSearch(encQuery) {
+    const query = decodeURIComponent(encQuery);
+    document.getElementById('searchQuery').value = query;
+    performSearch();
+  }
+
+  // LAST PLAYING
+  function getLastPlaying() {
+    return JSON.parse(localStorage.getItem('lastPlaying') || 'null');
+  }
+  function setLastPlaying(data) {
+    localStorage.setItem('lastPlaying', JSON.stringify(data));
+  }
+  function updateLastPlayingBlock() {
+    const query = document.getElementById('searchQuery').value.trim();
+    const block = document.getElementById('lastPlayingBlock');
+    const last = getLastPlaying();
+    if (!query && last && last.title) {
+      block.style.display = "";
+      let typeIcon = last.type === "Movie" ? "🎬" : "📺";
+      let info = last.type === "Movie"
+        ? `<span class="last-playing-title">${typeIcon} Last Played:</span> ${last.title} <button onclick="resumeLastPlaying()">▶ Resume</button>`
+        : `<span class="last-playing-title">${typeIcon} Last Played:</span> ${last.title} <button onclick="resumeLastPlaying()">▶ Resume</button> <span style="font-size:0.93em;">(S${last.season} E${last.episode})</span>`;
+      block.innerHTML = info;
+    } else {
+      block.style.display = "none";
+    }
+  }
+  function resumeLastPlaying() {
+    const last = getLastPlaying();
+    if (!last) return;
+    if (last.type === "Movie") {
+      openModal(getMovieUrl(last));
+    } else if (last.type === "TV") {
+      openModal(getTvUrl(last, last.season, last.episode));
+    }
+  }
+
+  // DATA LOADING
+  async function loadDatabases() {
+    try {
+      const moviesResp = await fetch('Movie.json');
+      if (moviesResp.ok) moviedb = await moviesResp.json();
+      else moviedb = [];
+    } catch { moviedb = []; }
+    try {
+      const tvResp = await fetch('TV.json');
+      if (tvResp.ok) tvdb = await tvResp.json();
+      else tvdb = [];
+    } catch { tvdb = []; }
+    databasesLoaded = true;
+  }
+  function getMovieUrl(item) {
+    return item.imdb ? `https://vidsrc.xyz/embed/movie?imdb=${item.imdb}` : "";
+  }
+  function getTvUrl(item, season, episode) {
+    return item.tmdb
+      ? `https://vidsrc.xyz/embed/tv?tmdb=${item.tmdb}&season=${season}&episode=${episode}`
+      : "";
+  }
+
+  function openModal(url) {
+    const modal = document.getElementById('playerModal');
+    const frame = document.getElementById('playerFrame');
+    frame.src = url;
+    modal.classList.add('show');
+  }
+  function closeModal() {
+    const modal = document.getElementById('playerModal');
+    const frame = document.getElementById('playerFrame');
+    modal.classList.remove('show');
+    frame.src = "";
+  }
+  function formatIdInfo(imdb, tmdb) {
+    const imdbDisplay = imdb ? imdb : "<span style='color:#888'>N/A</span>";
+    const tmdbDisplay = tmdb ? tmdb : "<span style='color:#888'>N/A</span>";
+    return `<strong>IMDb:</strong> ${imdbDisplay}<br><strong>TMDB:</strong> ${tmdbDisplay}`;
+  }
+  async function performSearch() {
+    const query = document.getElementById('searchQuery').value.toLowerCase().trim();
+    const resultsDiv = document.getElementById('results');
+    if (!databasesLoaded) await loadDatabases();
+
+    // If both databases failed to load, use fallback sample data
+    if ((moviedb.length === 0) && (tvdb.length === 0)) {
+      moviedb = [{ title: "Phoenix Sample Movie", imdb: "tt1234567", tmdb: "10001" }];
+      tvdb = [{ title: "Phoenix Sample TV Show", imdb: "tt9876543", tmdb: "20002" }];
+    }
+
+    if (!query) {
+      resultsDiv.innerHTML = "<div style='text-align:center;color:#ffab40;'>Type a search query to see results.</div>";
+      updateRecentSearchesBlock();
+      updateLastPlayingBlock();
+      return;
+    }
+
+    saveRecentSearch(query);
+    updateRecentSearchesBlock();
+    updateLastPlayingBlock();
+
+    let results = [];
+    results = results.concat(
+      moviedb.filter(item => item.title && item.title.toLowerCase().includes(query))
+             .map(item => ({...item, type: "Movie"}))
+    );
+    results = results.concat(
+      tvdb.filter(item => item.title && item.title.toLowerCase().includes(query))
+          .map(item => ({...item, type: "TV"}))
+    );
+
+    if (results.length === 0) {
+      resultsDiv.innerHTML = "<div style='text-align:center;color:#ff9100;'>No results found.</div>";
+      return;
+    }
+
+    resultsDiv.innerHTML = "";
+    for (const item of results.slice(0, 40)) {
+      if (item.type === "Movie") {
+        const url = getMovieUrl(item);
+        resultsDiv.innerHTML += `
+          <div class="search-item">
+            <div class="search-title">${item.title}</div>
+            <div class="search-type">🎬 Movie</div>
+            <div class="id-info">
+              ${formatIdInfo(item.imdb, item.tmdb)}
+            </div>
+            <button class="play-btn" onclick="playMovie('${encodeURIComponent(JSON.stringify(item))}')">▶ Play</button>
+          </div>
+        `;
+      } else {
+        resultsDiv.innerHTML += `
+          <div class="search-item">
+            <div class="search-title">${item.title}</div>
+            <div class="search-type">📺 TV Show</div>
+            <div class="id-info">
+              ${formatIdInfo(item.imdb, item.tmdb)}
+            </div>
+            <button class="play-btn" onclick="askTvPlay('${encodeURIComponent(JSON.stringify(item))}')">▶ Play</button>
+          </div>
+        `;
+      }
+    }
+  }
+
+  function playMovie(encItem) {
+    const item = JSON.parse(decodeURIComponent(encItem));
+    setLastPlaying({...item, type: "Movie"});
+    openModal(getMovieUrl(item));
+    updateLastPlayingBlock();
+  }
+
+  function askTvPlay(encItem) {
+    const item = JSON.parse(decodeURIComponent(encItem));
+    let season = prompt("Enter season number:", "1");
+    if (season === null) return;
+    season = season.replace(/[^0-9]/g, "");
+    if (!season || +season < 1) {
+      alert("Invalid season.");
+      return;
+    }
+    let episode = prompt("Enter episode number:", "1");
+    if (episode === null) return;
+    episode = episode.replace(/[^0-9]/g, "");
+    if (!episode || +episode < 1) {
+      alert("Invalid episode.");
+      return;
+    }
+    setLastPlaying({...item, type: "TV", season: season, episode: episode});
+    openModal(getTvUrl(item, season, episode));
+    updateLastPlayingBlock();
+  }
+
+  window.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('results').innerHTML = "<div style='text-align:center;color:#ffab40;'>Type a search query to see results.</div>";
+    document.getElementById('searchQuery').addEventListener('keydown', function(e) {
+      if (e.key === "Enter") performSearch();
+    });
+    document.querySelector('.input-container button').addEventListener('click', function() {
+      performSearch();
+    });
+    document.getElementById('searchQuery').addEventListener('input', function() {
+      updateRecentSearchesBlock();
+      updateLastPlayingBlock();
+      if (!this.value.trim()) {
+        document.getElementById('results').innerHTML = "<div style='text-align:center;color:#ffab40;'>Type a search query to see results.</div>";
+      }
+    });
+    updateRecentSearchesBlock();
+    updateLastPlayingBlock();
+
+    document.addEventListener('keydown', function(e) {
+      const modal = document.getElementById('playerModal');
+      if (modal.classList.contains('show') && e.key === "Escape") closeModal();
+    });
+    document.getElementById('playerModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+  });
+</script>
+</body>
+</html>
