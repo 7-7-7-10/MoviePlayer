@@ -448,6 +448,83 @@
       background: linear-gradient(135deg, #b71c1c, #e53935);
       color: #fff;
     }
+    body.theme-green {
+  background: linear-gradient(135deg, #072a07, #145c26 40%, #34c759 100%);
+  color: #eaffea;
+}
+body.theme-void {
+  background: linear-gradient(135deg, #181818, #2f2f2f 40%, #666 100%);
+  color: #eaeaea;
+}
+
+body.theme-green h1 {
+  color: #34c759;
+  text-shadow: 0 0 24px #145c26, 0 0 50px #072a07;
+}
+body.theme-void h1 {
+  color: #eaeaea;
+  text-shadow: 0 0 24px #666, 0 0 50px #222;
+}
+
+/* Buttons */
+.theme-btn.green { background: #34c759; color: #fff; }
+.theme-btn.void { background: #444; color: #fff; }
+body.theme-green .container {
+  border-color: #34c759;
+  background: rgba(7, 42, 7, 0.92);
+  box-shadow: 0 0 50px #34c759;
+}
+body.theme-void .container {
+  border-color: #666;
+  background: rgba(24, 24, 24, 0.92);
+  box-shadow: 0 0 50px #222;
+}
+body.theme-green .container:hover {
+  box-shadow: 0 0 60px #145c26;
+}
+body.theme-void .container:hover {
+  box-shadow: 0 0 60px #666;
+}
+
+body.theme-green button,
+body.theme-green input,
+body.theme-green select {
+  background: rgba(7,42,7,0.95);
+  color: #34c759;
+  border: 2px solid #145c26;
+  box-shadow: 0 0 10px #34c75930;
+}
+body.theme-green button {
+  background: linear-gradient(135deg, #34c759 30%, #145c26 100%);
+  color: #eaffea;
+  box-shadow: 0 0 15px #34c759a0;
+}
+body.theme-green button:hover {
+  box-shadow: 0 0 28px #145c26;
+  background: linear-gradient(135deg, #145c26 0%, #34c759 100%);
+  border: 2px solid #145c26;
+  color: #fff;
+}
+
+body.theme-void button,
+body.theme-void input,
+body.theme-void select {
+  background: rgba(24,24,24,0.95);
+  color: #eaeaea;
+  border: 2px solid #444;
+  box-shadow: 0 0 10px #444a;
+}
+body.theme-void button {
+  background: linear-gradient(135deg, #444 30%, #222 100%);
+  color: #eaeaea;
+  box-shadow: 0 0 15px #222a;
+}
+body.theme-void button:hover {
+  box-shadow: 0 0 28px #666;
+  background: linear-gradient(135deg, #222 0%, #444 100%);
+  border: 2px solid #222;
+  color: #fff;
+}
   </style>
 </head>
 <body class="theme-orange">
@@ -459,6 +536,8 @@
     <button class="theme-btn orange active" onclick="setTheme('orange')">Orange</button>
     <button class="theme-btn blue" onclick="setTheme('blue')">Blue</button>
     <button class="theme-btn red" onclick="setTheme('red')">Red</button>
+    <button class="theme-btn green" onclick="setTheme('green')">Emerald</button>
+    <button class="theme-btn void" onclick="setTheme('void')">Void</button>
   </div>
   <div class="input-container">
     <input id="searchQuery" type="text" placeholder="Search by title..." />
@@ -483,7 +562,7 @@
   let databasesLoaded = false;
 
   // THEME SWITCHER LOGIC
- function setTheme(theme) {
+function setTheme(theme) {
   document.body.className = 'theme-' + theme;
   document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelector('.theme-btn.' + theme).classList.add('active');
@@ -493,6 +572,12 @@
   } else if (theme === 'red') {
     document.getElementById('main-title').textContent = 'Ember | MOVIES';
     document.getElementById('main-header').textContent = 'Ember';
+  } else if (theme === 'green') {
+    document.getElementById('main-title').textContent = 'Emerald | MOVIES';
+    document.getElementById('main-header').textContent = 'Emerald';
+  } else if (theme === 'void') {
+    document.getElementById('main-title').textContent = 'Void | MOVIES';
+    document.getElementById('main-header').textContent = 'Void';
   } else {
     document.getElementById('main-title').textContent = 'Phoenix | MOVIES';
     document.getElementById('main-header').textContent = 'Phoenix';
