@@ -483,18 +483,21 @@
   let databasesLoaded = false;
 
   // THEME SWITCHER LOGIC
-  function setTheme(theme) {
-    document.body.className = 'theme-' + theme;
-    document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector('.theme-btn.' + theme).classList.add('active');
-    if (theme === 'blue') {
-      document.getElementById('main-title').textContent = 'ION | MOVIES';
-      document.getElementById('main-header').textContent = 'ION';
-    } else {
-      document.getElementById('main-title').textContent = 'Phoenix | MOVIES';
-      document.getElementById('main-header').textContent = 'Phoenix';
-    }
+ function setTheme(theme) {
+  document.body.className = 'theme-' + theme;
+  document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector('.theme-btn.' + theme).classList.add('active');
+  if (theme === 'blue') {
+    document.getElementById('main-title').textContent = 'ION | MOVIES';
+    document.getElementById('main-header').textContent = 'ION';
+  } else if (theme === 'red') {
+    document.getElementById('main-title').textContent = 'Ember | MOVIES';
+    document.getElementById('main-header').textContent = 'Ember';
+  } else {
+    document.getElementById('main-title').textContent = 'Phoenix | MOVIES';
+    document.getElementById('main-header').textContent = 'Phoenix';
   }
+}
 
   // RECENT SEARCHES
   function getRecentSearches() {
