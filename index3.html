@@ -389,15 +389,16 @@ const episodeNumber = document.getElementById("episodeNumber").value.trim();
     // Construct the embed URL based on provider
  let url = "";
 if (idType === "tmdb" && seasonNumber && episodeNumber) {
-  // TV show episode embed URL with TMDb ID
+  // TV show episode embed URL with TMDb ID (use query format, works across all domains)
   switch (provider) {
-    case "frembed": url = `https://vidsrc.xyz/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
-    case "superembed": url = `https://embed.su/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
-    case "smashystream": url = `https://vidsrc.net/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
-    case "autoembed": url = `https://vidsrc.in/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
-    case "upcloud": url = `https://vidsrc.cc/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
-    case "vidsrc": url = `https://vidsrc.to/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
+    case "frembed": url = `https://vidsrc.xyz/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+    case "superembed": url = `https://embed.su/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+    case "smashystream": url = `https://vidsrc.net/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+    case "autoembed": url = `https://vidsrc.in/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+    case "upcloud": url = `https://vidsrc.cc/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+    case "vidsrc": url = `https://vidsrc.to/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
   }
+}
 } else {
   // Movie embed logic (IMDb or TMDb converted to IMDb)
   switch (provider) {
