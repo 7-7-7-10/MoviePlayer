@@ -233,19 +233,16 @@
       [moviedb, tvdb] = await Promise.all([movies, tv]);
     }
 
-    function getVidsrcUrl(item) {
-      if (item.type === "Movie") {
-        if (item.imdb) {
-          return `https://vidsrc.xyz/embed/movie?imdb_id=${item.imdb}`;
-        } else if (item.tmdb) {
-          return `https://vidsrc.xyz/embed/movie?tmdb_id=${item.tmdb}`;
-        }
-      } else {
-        if (item.tmdb) {
-          return `https://vidsrc.xyz/embed/tv?tmdb_id=${item.tmdb}&season=1&episode=1`;
-        } else if (item.imdb) {
-          return `https://vidsrc.xyz/embed/tv?imdb_id=${item.imdb}&season=1&episode=1`;
-        }
+    // Build url for movies (imdb) and tv (tmdb)
+    function getMovieUrl(item) {
+      if (item.imdb) {
+        return `https://vidsrc.xyz/embed/movie?imdb_id=${item.imdb}`;
+      }
+      return "";
+    }
+    function getTvUrl(item, season, episode) {
+      if (item.tmdb) {
+        return `https://vidsrc.xyz/embed/tv?tmdb_id=${item.tmdb}&season=${season}&episode=${episode}`;
       }
       return "";
     }
@@ -293,19 +290,55 @@
       }
       resultsDiv.innerHTML = "";
       for (const item of results.slice(0, 40)) {
-        let vidsrcUrl = getVidsrcUrl(item);
-        resultsDiv.innerHTML += `
-          <div class="search-item">
-            <div class="search-title">${item.title}</div>
-            <div class="search-type">${item.type === "Movie" ? "🎬 Movie" : "📺 TV Show"}</div>
-            <div class="id-info">
-              ${formatIdInfo(item.imdb, item.tmdb)}
+        if (item.type === "Movie") {
+          const url = getMovieUrl(item);
+          resultsDiv.innerHTML += `
+            <div class="search-item">
+              <div class="search-title">${item.title}</div>
+              <div class="search-type">🎬 Movie</div>
+              <div class="id-info">
+                ${formatIdInfo(item.imdb, item.tmdb)}
+              </div>
+              <button class="play-btn" onclick="openModal('${url}')">▶ Play</button>
             </div>
-            <button class="play-btn" onclick="openModal('${vidsrcUrl}')">▶ Play</button>
-          </div>
-        `;
+          `;
+        } else {
+          // TV: ask for season and episode before opening modal
+          resultsDiv.innerHTML += `
+            <div class="search-item">
+              <div class="search-title">${item.title}</div>
+              <div class="search-type">📺 TV Show</div>
+              <div class="id-info">
+                ${formatIdInfo(item.imdb, item.tmdb)}
+              </div>
+              <button class="play-btn" onclick="askTvPlay(${item.tmdb})">▶ Play</button>
+            </div>
+          `;
+        }
       }
     }
+
+    // Prompt for season/episode, then play
+    function askTvPlay(tmdb) {
+      let season = prompt("Enter season number:", "1");
+      if (season === null) return;
+      season = season.replace(/[^0-9]/g, "");
+      if (!season || +season < 1) {
+        alert("Invalid season.");
+        return;
+      }
+      let episode = prompt("Enter episode number:", "1");
+      if (episode === null) return;
+      episode = episode.replace(/[^0-9]/g, "");
+      if (!episode || +episode < 1) {
+        alert("Invalid episode.");
+        return;
+      }
+      // Build URL and open modal
+      const url = `https://vidsrc.xyz/embed/tv?tmdb_id=${tmdb}&season=${season}&episode=${episode}`;
+      openModal(url);
+    }
+
     document.getElementById('searchQuery').addEventListener('keydown', function(e) {
       if (e.key === "Enter") performSearch();
     });
