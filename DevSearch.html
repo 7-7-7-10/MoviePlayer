@@ -546,7 +546,7 @@
       let typeIcon = last.type === "Movie" ? "🎬" : "📺";
       let info = last.type === "Movie"
         ? `<span class="last-playing-title">${typeIcon} Last Played:</span> ${last.title} <button onclick="resumeLastPlaying()">▶ Resume</button>`
-        : `<span class="last-playing-title">${typeIcon} Last Played:</span> ${last.title} <button onclick="resumeLastPlaying()">▶ Resume</button> <span style="font-size:0.93em;">(S${last.season} E${last.episode})</span>`;
+        : `<span class="last-playing-title">${typeIcon} Last Played:</span> ${last.title} (S${last.season} E${last.episode}) <button onclick="resumeLastPlaying()">▶ Resume</button> <span style="font-size:0.93em;"></span>`;
       block.innerHTML = info;
     } else {
       block.style.display = "none";
