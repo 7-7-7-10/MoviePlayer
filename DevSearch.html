@@ -307,6 +307,7 @@
     .theme-btn.red { background: #e53935; color: #fff;}
     .theme-btn.active { outline: 2px solid #fffbe6; }
     .recent-searches-block {
+      margin-top: 32px;
       margin-bottom: 18px;
       background: rgba(255,255,255,0.05);
       border-radius: 12px;
@@ -318,6 +319,7 @@
     .recent-title {
       font-size: 1.19rem;
       font-weight: bold;
+      margin-top: 32px;  /* Increased space above Recent Searches */
       margin-bottom: 8px;
       color: #ff9100;
     }
@@ -450,20 +452,22 @@
 <body class="theme-orange">
   <h1 id="main-header">🔥 Phoenix</h1>
   <div class="catchphrase">Unblocked. — Unstoppable. — Unbreakable.</div>
-  <div class="container">
-    <div class="theme-switcher">
-      <span style="font-weight:bold;">Theme:</span>
-      <button class="theme-btn orange active" onclick="setTheme('orange')">Orange</button>
-      <button class="theme-btn blue" onclick="setTheme('blue')">Blue</button>
-      <button class="theme-btn red" onclick="setTheme('red')">Red</button>
-    </div>
-    <div class="input-container">
-      <input id="searchQuery" type="text" placeholder="Search by title..." />
-      <button onclick="performSearch()">Search</button>
-        <div id="results" class="search-results"></div>
-       </div>
-    <div id="lastPlayingBlock" class="last-playing-block" style="display:none;"></div>
-    <div id="recentSearchesBlock" class="recent-searches-block" style="display:none;"></div>
+ <div class="container">
+  <div class="theme-switcher">
+    <span style="font-weight:bold;">Theme:</span>
+    <button class="theme-btn orange active" onclick="setTheme('orange')">Orange</button>
+    <button class="theme-btn blue" onclick="setTheme('blue')">Blue</button>
+    <button class="theme-btn red" onclick="setTheme('red')">Red</button>
+  </div>
+  <div class="input-container">
+    <input id="searchQuery" type="text" placeholder="Search by title..." />
+    <button onclick="performSearch()">Search</button>
+  </div>
+  <div id="results" class="search-results"></div>
+  <div id="lastPlayingBlock" class="last-playing-block" style="display:none;"></div>
+  <div id="recentSearchesBlock" class="recent-searches-block" style="display:none;"></div>
+</div>
+ 
     </div>
 
   </div>
