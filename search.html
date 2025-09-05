@@ -228,8 +228,8 @@
     let moviedb = [], tvdb = [];
 
     async function loadDatabases() {
-      const movies = fetch('movie.json').then(r => r.json()).catch(() => []);
-      const tv = fetch('tv.json').then(r => r.json()).catch(() => []);
+      const movies = fetch('Movie.json').then(r => r.json()).catch(() => []);
+      const tv = fetch('TV.json').then(r => r.json()).catch(() => []);
       [moviedb, tvdb] = await Promise.all([movies, tv]);
     }
 
