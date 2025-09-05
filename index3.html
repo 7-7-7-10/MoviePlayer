@@ -183,11 +183,12 @@
 </head>
 <body>
   <h1>🚀 ZXS MOVIE LAUNCHER</h1>
-  <div class="tab-container">
-    <button class="tab-button active" onclick="showTab('movies')"> Movies</button>
-    <button class="tab-button" onclick="showTab('tvshows')"> TV Shows</button>
-    <button class="tab-button" onclick="showTab('search')"> Cloak</button>
-  </div>
+<div class="tab-container">
+  <button class="tab-button active" data-tab="movies" onclick="showTab('movies')">Movies</button>
+  <button class="tab-button" data-tab="tvshows" onclick="showTab('tvshows')">TV Shows</button>
+  <button class="tab-button" data-tab="search" onclick="showTab('search')">Cloak</button>
+</div>
+
   <!-- Movies Tab -->
   <div id="movies" class="container">
     <div class="input-container">
@@ -272,23 +273,21 @@
     }
 
     // Show tab content
-    function showTab(tab) {
-      const movies = document.getElementById('movies');
-      const tvshows = document.getElementById('tvshows');
-      const search = document.getElementById('search');
-      const buttons = document.querySelectorAll('.tab-button');
+  function showTab(tab) {
+  const tabs = ['movies', 'tvshows', 'search'];
+  tabs.forEach(t => {
+    document.getElementById(t).style.display = (t === tab) ? 'block' : 'none';
+  });
 
-      movies.style.display = 'none';
-      tvshows.style.display = 'none';
-      search.style.display = 'none';
+  const buttons = document.querySelectorAll('.tab-button');
+  buttons.forEach(button => {
+    button.classList.remove('active');
+  });
 
-      if (tab === 'movies') movies.style.display = 'block';
-      if (tab === 'tvshows') tvshows.style.display = 'block';
-      if (tab === 'search') search.style.display = 'block';
+  const activeButton = document.querySelector(`.tab-button[data-tab="${tab}"]`);
+  if (activeButton) activeButton.classList.add('active');
+}
 
-      buttons.forEach(button => button.classList.remove('active'));
-      document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add('active');
-    }
     function toggleSeasonEpisodeInputs() {
   const idType = document.getElementById("idType").value;
   const seasonInput = document.getElementById("cloakSeasonNumber");
