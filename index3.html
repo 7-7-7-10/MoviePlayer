@@ -289,6 +289,19 @@
       buttons.forEach(button => button.classList.remove('active'));
       document.querySelector(`.tab-button[onclick="showTab('${tab}')"]`).classList.add('active');
     }
+    function toggleSeasonEpisodeInputs() {
+  const idType = document.getElementById("idType").value;
+  const seasonInput = document.getElementById("seasonNumber");
+  const episodeInput = document.getElementById("episodeNumber");
+  if (idType === "tmdb") {
+    seasonInput.style.display = "inline-block"; // Show inputs
+    episodeInput.style.display = "inline-block";
+  } else {
+    seasonInput.style.display = "none"; // Hide inputs for IMDb
+    episodeInput.style.display = "none";
+  }
+}
+
 
     // Search TMDB multi
   
@@ -348,6 +361,7 @@
         tvIdSet.add(mediaId);
         updateIdList("tvIdList", tvIdSet);
       }
+      
     }
     async function launchCloak() {
   const idType = document.getElementById("idType").value;
@@ -369,16 +383,33 @@
       // If IMDb ID entered, strip 'tt' if present
       imdbId = inputId.replace(/^tt/, '');
     }
+    const seasonNumber = document.getElementById("seasonNumber").value.trim();
+const episodeNumber = document.getElementById("episodeNumber").value.trim();
+
     // Construct the embed URL based on provider
-    let url = "";
-    switch (provider) {
-      case "frembed": url = `https://vidsrc.xyz/embed/movie?imdb=${imdbId}`; break;
-      case "superembed": url = `https://embed.su/embed/movie/${imdbId}`; break;
-      case "smashystream": url = `https://vidsrc.net/embed/movie?imdb=${imdbId}`; break;
-      case "autoembed": url = `https://vidsrc.in/embed/movie/${imdbId}`; break;
-      case "upcloud": url = `https://vidsrc.cc/embed/movie/${imdbId}`; break;
-      case "vidsrc": url = `https://vidsrc.to/embed/movie/${imdbId}`; break;
-    }
+ let url = "";
+if (idType === "tmdb" && seasonNumber && episodeNumber) {
+  // TV show episode embed URL with TMDb ID
+  switch (provider) {
+    case "frembed": url = `https://vidsrc.xyz/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
+    case "superembed": url = `https://embed.su/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
+    case "smashystream": url = `https://vidsrc.net/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
+    case "autoembed": url = `https://vidsrc.in/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
+    case "upcloud": url = `https://vidsrc.cc/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
+    case "vidsrc": url = `https://vidsrc.to/embed/tv/${inputId}/${seasonNumber}/${episodeNumber}`; break;
+  }
+} else {
+  // Movie embed logic (IMDb or TMDb converted to IMDb)
+  switch (provider) {
+    case "frembed": url = `https://vidsrc.xyz/embed/movie?imdb=${imdbId}`; break;
+    case "superembed": url = `https://embed.su/embed/movie/${imdbId}`; break;
+    case "smashystream": url = `https://vidsrc.net/embed/movie?imdb=${imdbId}`; break;
+    case "autoembed": url = `https://vidsrc.in/embed/movie/${imdbId}`; break;
+    case "upcloud": url = `https://vidsrc.cc/embed/movie/${imdbId}`; break;
+    case "vidsrc": url = `https://vidsrc.to/embed/movie/${imdbId}`; break;
+  }
+}
+
     // Open about:blank window
     const win = window.open('about:blank');
     // Setup blank page with iframe for embed URL
