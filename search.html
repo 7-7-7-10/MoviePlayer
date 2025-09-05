@@ -133,6 +133,15 @@
       margin-bottom: 6px;
       font-weight: 500;
     }
+    .id-info {
+      margin: 8px 0 0 0;
+      font-size: 0.98rem;
+      color: #00bcd4;
+      background: rgba(0,229,255,0.07);
+      border-radius: 7px;
+      padding: 6px 12px;
+      word-break: break-all;
+    }
     .play-btn {
       margin-top: 10px;
       padding: 10px 28px;
@@ -170,9 +179,8 @@
     let moviedb = [], tvdb = [];
 
     async function loadDatabases() {
-      // These should be in the same folder as search.html
-      const movies = fetch('Movie.json').then(r => r.json()).catch(() => []);
-      const tv = fetch('TV.json').then(r => r.json()).catch(() => []);
+      const movies = fetch('movie.json').then(r => r.json()).catch(() => []);
+      const tv = fetch('tv.json').then(r => r.json()).catch(() => []);
       [moviedb, tvdb] = await Promise.all([movies, tv]);
     }
 
@@ -205,7 +213,6 @@
             ? `https://embed.su/embed/movie/${item.imdb.replace(/^tt/, '')}`
             : `https://embed.su/embed/movie/${item.tmdb}`;
         } else {
-          // TV: Use TMDB (or IMDB) and default to S1E1 if you want (can be improved if you have more info)
           embedUrl = item.tmdb
             ? `https://embed.su/embed/tv/${item.tmdb}/1/1`
             : (item.imdb ? `https://embed.su/embed/tv/${item.imdb}/1/1` : "#");
@@ -214,6 +221,10 @@
           <div class="search-item">
             <div class="search-title">${item.title}</div>
             <div class="search-type">${item.type === "Movie" ? "🎬 Movie" : "📺 TV Show"}</div>
+            <div class="id-info">
+              <strong>IMDb:</strong> ${item.imdb || "<span style='color:#888'>N/A</span>"}<br>
+              <strong>TMDB:</strong> ${item.tmdb || "<span style='color:#888'>N/A</span>"}
+            </div>
             <button class="play-btn" onclick="window.open('${embedUrl}','_blank')">▶ Play</button>
           </div>
         `;
