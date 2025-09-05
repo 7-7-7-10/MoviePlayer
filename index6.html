@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Classroom</title>
+  <link rel="icon" type="image/x-icon" id="mainFavicon" href="https://ssl.gstatic.com/classroom/ic_product_classroom_32.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent: #00e5ff;
+      --accent2: #00bcd4;
+      --accent-bg: rgba(0,229,255,0.08);
+      --accent-bg2: rgba(0,229,255,0.22);
+      --accent-shadow: 0 0 25px var(--accent);
+      --input-bg: rgba(30,30,30,0.9);
+      --input-border: #00bcd4;
+    }
+    body {
+      font-family: 'Orbitron', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0d0d0d, #1a1a1a 40%, #101820);
+      color: #f0f0f0;
+      overflow-x: hidden;
+      transition: background 0.3s;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image: linear-gradient(90deg, var(--accent-bg2) 1px, transparent 1px),
+                        linear-gradient(180deg, var(--accent-bg2) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      animation: moveGrid 20s linear infinite;
+    }
+    @keyframes moveGrid {
+      from { transform: translate(0,0); }
+      to { transform: translate(-50px,-50px); }
+    }
+    h1 {
+      text-align: center;
+      margin: 25px 0;
+      font-size: 3.5rem;
+      color: var(--accent);
+      text-shadow: 0 0 15px var(--accent), 0 0 25px var(--accent2);
+      position: relative;
+      z-index: 1;
+      transition: color 0.3s;
+    }
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      z-index: 2;
+      position: relative;
+    }
+    .tab-button {
+      padding: 12px 28px;
+      margin: 0 12px;
+      font-size: 16px;
+      border: 2px solid var(--accent);
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      cursor: pointer;
+      border-radius: 40px;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 12px var(--accent-bg);
+    }
+    .tab-button:hover {
+      transform: scale(1.08);
+      box-shadow: var(--accent-shadow);
+    }
+    .tab-button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+      font-weight: bold;
+      text-shadow: none;
+      box-shadow: var(--accent-shadow);
+    }
+    .container {
+      max-width: 850px;
+      margin: 30px auto;
+      padding: 35px;
+      border: 2px solid var(--accent-bg2);
+      border-radius: 20px;
+      background: rgba(15, 15, 15, 0.9);
+      box-shadow: 0 0 40px var(--accent-bg);
+      position: relative;
+      z-index: 1;
+      transition: all 0.4s ease;
+    }
+    .container:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 50px var(--accent-bg2);
+    }
+    .input-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 25px;
+      justify-content: center;
+    }
+    input, select, button {
+      padding: 12px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      background: var(--input-bg);
+      color: var(--accent);
+      border: 2px solid var(--input-border);
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+    input:focus, select:focus {
+      outline: none;
+      background: #111;
+      box-shadow: 0 0 15px var(--accent);
+    }
+    button {
+      background: linear-gradient(135deg, var(--accent2), #2196f3);
+      border: none;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px var(--accent-bg2);
+    }
+    button:hover {
+      transform: scale(1.08);
+      box-shadow: var(--accent-shadow);
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin: 12px 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .cloak-setting {
+      padding: 8px 12px;
+      background: var(--accent-bg);
+      border-radius: 9px;
+      color: var(--accent);
+      font-size: 15px;
+      border: 1.5px solid var(--accent2);
+      margin: 0 4px 8px 0;
+      min-width: 160px;
+      transition: background 0.2s;
+    }
+    .cloak-setting:focus {
+      outline: none;
+      background: #222;
+      box-shadow: 0 0 12px var(--accent2);
+    }
+    .cloak-label {
+      color: var(--accent2);
+      font-size: 15px;
+      margin-right: 8px;
+      font-weight: bold;
+    }
+    .cloak-btn {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #000;
+      border: none;
+      font-weight: bold;
+      padding: 8px 18px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px var(--accent-bg2);
+      margin-left: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cloak-btn:hover {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 0 20px var(--accent-bg);
+    }
+    iframe {
+      width: 100%;
+      height: 420px;
+      border: 2px solid var(--accent);
+      border-radius: 20px;
+      margin-top: 20px;
+      background: #000;
+      box-shadow: var(--accent-shadow);
+      transition: all 0.4s ease;
+    }
+    iframe:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 40px var(--accent);
+    }
+    .search-results {
+      margin-top: 25px;
+    }
+    .search-item {
+      padding: 15px;
+      border: 2px solid var(--accent);
+      margin: 10px 0;
+      border-radius: 12px;
+      cursor: pointer;
+      background: rgba(20,20,20,0.8);
+      transition: all 0.3s ease;
+    }
+    .search-item:hover {
+      transform: scale(1.05);
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      box-shadow: var(--accent-shadow);
+    }
+    .logged-ids {
+      margin-top: 12px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364 90%);
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 18px var(--accent-bg);
+      max-height: 140px;
+      overflow-y: auto;
+      user-select: none;
+      color: var(--accent);
+      transition: all 0.3s ease;
+    }
+    .logged-ids:hover {
+      box-shadow: 0 0 36px var(--accent);
+      border-color: var(--accent2);
+      background: linear-gradient(135deg, var(--accent2) 10%, #232f34 90%);
+    }
+    .logged-ids h3 {
+      margin: 0 0 10px 0;
+      font-weight: 700;
+      color: var(--accent);
+      text-shadow: 0 0 8px var(--accent2);
+      letter-spacing: 2px;
+      font-size: 1.12em;
+    }
+    .logged-ids ul {
+      padding-left: 20px;
+      margin: 0;
+      list-style-type: decimal;
+      color: #e6f7ff;
+      font-size: 15px;
+      line-height: 1.38;
+      background: none;
+    }
+    .logged-ids ul li {
+      margin-bottom: 4px;
+      color: var(--accent2);
+      text-shadow: 0 0 6px var(--accent2);
+    }
+    /* --- Autofill dropdown --- */
+    .autofill-dropdown {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 6px);
+      min-width: 180px;
+      background: #181818;
+      border-radius: 9px;
+      box-shadow: 0 0 12px var(--accent);
+      border: 2px solid var(--accent);
+      z-index: 99;
+      padding: 0;
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      color: #f6f6f6;
+      animation: autofillFadeIn 0.18s;
+    }
+    @keyframes autofillFadeIn {
+      from {opacity: 0; transform: translateY(-8px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    .autofill-dropdown li {
+      list-style: none;
+      margin: 0;
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      border-bottom: 1px solid var(--accent-bg);
+    }
+    .autofill-dropdown li:last-child {
+      border-bottom: none;
+    }
+    .autofill-dropdown li:hover, .autofill-dropdown li.active {
+      background: linear-gradient(90deg, var(--accent-bg2), var(--accent-bg));
+      color: var(--accent);
+      font-weight: bold;
+      text-shadow: 0 0 8px var(--accent);
+    }
+    .autofill-parent {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+    }
+    /* --- Recent Cloaks --- */
+    .recent-cloaks {
+      margin: 12px 0 0 0;
+      color: var(--accent2);
+      font-size: 15px;
+      max-height: 90px;
+      overflow-y: auto;
+      border-radius: 7px;
+      background: var(--accent-bg);
+      padding: 8px 10px;
+      border: 1px solid var(--accent2);
+    }
+    .recent-cloaks-title {
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-size: 15px;
+      text-shadow: 0 0 6px var(--accent2);
+    }
+    .recent-cloaks-url {
+      display: block;
+      color: #fff;
+      margin-bottom: 3px;
+      word-break: break-all;
+      cursor: pointer;
+      text-decoration: underline dotted var(--accent2);
+      transition: color 0.18s;
+    }
+    .recent-cloaks-url:hover {
+      color: var(--accent);
+      background: var(--accent-bg2);
+    }
+    /* --- Modal Help --- */
+    .modal {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(10,30,50,0.85);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #181c24;
+      color: #fff;
+      padding: 32px 28px;
+      border-radius: 18px;
+      box-shadow: 0 0 40px var(--accent2);
+      max-width: 440px;
+      width: 98vw;
+      font-size: 18px;
+      position: relative;
+      border: 2px solid var(--accent);
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.4em;
+      text-shadow: 0 0 8px var(--accent2);
+      font-weight: bold;
+    }
+    .modal-close {
+      position: absolute;
+      right: 18px; top: 14px;
+      background: #222;
+      border: none;
+      color: var(--accent2);
+      font-size: 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 44px; height: 38px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      box-shadow: 0 0 8px var(--accent);
+    }
+    .modal-close:hover {
+      background: var(--accent2);
+      color: #000;
+    }
+    /* --- End Modal Help --- */
+    /* Custom color picker style */
+    .color-picker {
+      appearance: none;
+      border: 2px solid var(--accent2);
+      border-radius: 8px;
+      width: 40px;
+      height: 36px;
+      background: #000;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-left: 2px;
+      transition: box-shadow 0.18s;
+      box-shadow: 0 0 8px var(--accent2);
+    }
+    .color-picker:focus {
+      outline: none;
+      box-shadow: 0 0 20px var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <h1 id="mainTitle">🚀 ZXS MOVIE LAUNCHER</h1>
+<div class="tab-container">
+  <button class="tab-button active" data-tab="movies" onclick="showTab('movies')">Movies</button>
+  <button class="tab-button" data-tab="tvshows" onclick="showTab('tvshows')">TV Shows</button>
+  <button class="tab-button" data-tab="search" onclick="showTab('search')">Cloak</button>
+</div>
+
+  <!-- Movies Tab -->
+  <div id="movies" class="container">
+    <div class="input-container">
+      <div class="autofill-parent">
+        <input id="movieMediaId" type="text" placeholder="Enter Movie IMDB ID" autocomplete="off">
+      </div>
+      <select id="movieProvider">
+        <option value="vidsrc">Vidsrc (.to)</option>
+        <option value="frembed">Vidsrc (.xyz)</option> 
+        <option value="autoembed">Vidsrc (.in)</option>
+        <option value="upcloud">Broken (.cc)</option>
+        <option value="smashystream">Vidsrc (.net)</option> 
+        <option value="superembed">Embedsu</option>
+      </select>
+      <button onclick="playMovie()">▶ Play Movie</button>
+    </div>
+    <iframe id="moviePlayer" src="" allowfullscreen></iframe>
+    <div class="logged-ids" id="movieLog">
+      <h3>Logged Movie TMDB IDs</h3>
+      <ul id="movieIdList"></ul>
+    </div>
+  </div>
+  <!-- TV Shows Tab -->
+  <div id="tvshows" class="container" style="display: none;">
+    <div class="input-container">
+      <div class="autofill-parent">
+        <input id="tvMediaId" type="text" placeholder="Enter TV Show TMDB ID" autocomplete="off">
+      </div>
+      <input id="seasonNumber" type="number" placeholder="Season" min="1">
+      <input id="episodeNumber" type="number" placeholder="Episode" min="1">
+      <select id="tvProvider">
+        <option value="vidsrc">Vidsrc (.to)</option>
+        <option value="frembed">Vidsrc (.xyz)</option> 
+        <option value="autoembed">Vidsrc (.in)</option>
+        <option value="smashystream">Vidsrc (.net)</option> 
+        <option value="upcloud">Vidsrc (.cc)</option> 
+        <option value="superembed">Embedsu</option>
+      </select>
+      <button onclick="playTvShow()">▶ Play TV Show</button>
+    </div>
+    <iframe id="tvPlayer" src="" allowfullscreen></iframe>
+    <div class="logged-ids" id="tvLog">
+      <h3>Logged TV Show TMDB IDs</h3>
+      <ul id="tvIdList"></ul>
+    </div>
+  </div>
+  <!-- Cloak Tab -->
+  <div id="search" class="container" style="display: none;">
+    <div class="input-container">
+      <select id="idType" style="flex: 0 0 150px;" onchange="toggleSeasonEpisodeInputs(); updateCloakAutofill();">
+        <option value="imdb">IMDb ID</option>
+        <option value="tmdb">TMDb ID</option>
+      </select>
+      <div class="autofill-parent">
+        <input id="cloakMediaId" type="text" placeholder="Enter ID" style="flex: 1 1 200px;" autocomplete="off"/>
+      </div>
+      <input id="cloakSeasonNumber" type="number" placeholder="Season" min="1" style="flex: 0 0 100px;" />
+      <input id="cloakEpisodeNumber" type="number" placeholder="Episode" min="1" style="flex: 0 0 100px;" />
+      <select id="cloakProvider" style="flex: 0 0 180px;">
+        <option value="frembed">Vidsrc (.xyz)</option> 
+        <option value="vidsrc">Vidsrc (.to)</option>
+        <option value="autoembed">Vidsrc (.in)</option>
+        <option value="upcloud">Vidsrc (.cc)</option>
+        <option value="smashystream">Vidsrc (.net)</option> 
+        <option value="superembed">Embedsu</option>
+      </select>
+      <button onclick="launchCloak()">▶ Launch</button>
+    </div>
+    <div class="action-row">
+      <span class="cloak-label">Theme:</span> 
+      <input type="color" id="themeColorPicker" class="color-picker" value="#00e5ff" title="Change Theme Color">
+      <span class="cloak-label">Tab Cloak Title:</span>
+      <input id="cloakTabTitle" class="cloak-setting" type="text" maxlength="32" placeholder="e.g. Math Homework">
+      <span class="cloak-label">Tab Cloak Favicon:</span>
+      <input id="cloakTabFavicon" class="cloak-setting" type="text" maxlength="128" placeholder="Favicon URL">
+    </div>
+    <div class="action-row">
+      <span class="cloak-label">Panic URL:</span>
+      <input id="panicUrl" class="cloak-setting" type="text" maxlength="128" placeholder="e.g. https://google.com">
+      <span class="cloak-label">Panic Key:</span>
+      <input id="panicKey" class="cloak-setting" type="text" maxlength="1" value="`" title="Single key to trigger panic">
+      <button class="cloak-btn" onclick="testPanic()">Test Panic</button>
+      <button class="cloak-btn" onclick="eraseAllLocalData()">Erase All</button>
+      <button class="cloak-btn" onclick="showHelpModal()">Help</button>
+    </div>
+    <div class="action-row">
+      <button class="cloak-btn" onclick="copyCloakUrl()">Copy Cloak URL</button>
+      <button class="cloak-btn" onclick="openMinimalCloak()">Window Mode</button>
+    </div>
+    <div class="recent-cloaks">
+      <div class="recent-cloaks-title">Recent Cloaks:</div>
+      <div id="recentCloaksList"></div>
+    </div>
+    <p style="text-align:center; font-size: 0.9rem; color: #888;">Opens video in a new tab with cloaked URL (Movies only Rn IMDB)</p>
+  </div>
+  <!-- Modal Help -->
+  <div class="modal" id="helpModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="hideHelpModal()">×</button>
+      <h2>Cloak Tab Help</h2>
+      <ul>
+        <li><b>Panic Key:</b> Set a key and URL. Press that key anywhere to instantly redirect.</li>
+        <li><b>Theme:</b> Pick a color to change accent and glow.</li>
+        <li><b>Tab Cloak:</b> Change tab title and favicon for stealth.</li>
+        <li><b>Autofill:</b> Saved IDs appear as suggestions.</li>
+        <li><b>Copy Cloak URL:</b> Copies constructed embed URL.</li>
+        <li><b>Window Mode:</b> Opens cloak link in a blank window.</li>
+        <li><b>Erase All:</b> Clears IDs and settings.</li>
+        <li><b>Recent Cloaks:</b> See recent cloak URLs.</li>
+        <li><b>Help:</b> Shows this info popup.</li>
+      </ul>
+      <p style="color: #00e5ff; font-size: 1em; margin-top: 8px;">
+        <b>Shortcuts:</b> Press your panic key anytime for instant redirect.<br>
+        <b>Pro Tip:</b> Change tab title/fav to anything stealthy!
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // --- Theme Color ---
+    function setThemeColor(color) {
+      document.documentElement.style.setProperty('--accent', color);
+      document.documentElement.style.setProperty('--accent2', color);
+      document.getElementById("mainTitle").style.color = color;
+    }
+    document.getElementById('themeColorPicker').addEventListener('input', function() {
+      setThemeColor(this.value);
+      localStorage.setItem("themeColor", this.value);
+    });
+
+    function restoreThemeColor() {
+      const color = localStorage.getItem("themeColor") || "#00e5ff";
+      setThemeColor(color);
+      document.getElementById('themeColorPicker').value = color;
+    }
+
+    // --- Panic Key ---
+    function restorePanicSettings() {
+      document.getElementById('panicUrl').value = localStorage.getItem('panicUrl')||"";
+      document.getElementById('panicKey').value = localStorage.getItem('panicKey')||"`";
+    }
+    let panicActive = true;
+    document.addEventListener('keydown', function(e) {
+      if(!panicActive) return;
+      const key = document.getElementById('panicKey').value || "`";
+      const url = document.getElementById('panicUrl').value;
+      if(url && e.key === key) {
+        window.location.href = url;
+      }
+    });
+    document.getElementById('panicUrl').addEventListener('input', function(){
+      localStorage.setItem('panicUrl', this.value);
+    });
+    document.getElementById('panicKey').addEventListener('input', function(){
+      localStorage.setItem('panicKey', this.value);
+    });
+    function testPanic() {
+      const url = document.getElementById('panicUrl').value;
+      if(url) window.open(url, '_blank');
+    }
+
+    // --- Tab Cloaking ---
+    function restoreTabCloak() {
+      document.getElementById('cloakTabTitle').value = localStorage.getItem('cloakTabTitle')||"";
+      document.getElementById('cloakTabFavicon').value = localStorage.getItem('cloakTabFavicon')||"";
+      setTabCloak();
+    }
+    document.getElementById('cloakTabTitle').addEventListener('input', function(){
+      localStorage.setItem('cloakTabTitle', this.value);
+      setTabCloak();
+    });
+    document.getElementById('cloakTabFavicon').addEventListener('input', function(){
+      localStorage.setItem('cloakTabFavicon', this.value);
+      setTabCloak();
+    });
+    function setTabCloak() {
+      let title = document.getElementById('cloakTabTitle').value;
+      let favicon = document.getElementById('cloakTabFavicon').value;
+      document.title = title || "Classroom";
+      let fav = document.getElementById("mainFavicon");
+      if(favicon) fav.href = favicon;
+      else fav.href = "https://ssl.gstatic.com/classroom/ic_product_classroom_32.png";
+    }
+
+    // --- Modal Help ---
+    function showHelpModal() {
+      document.getElementById("helpModal").style.display = "flex";
+      panicActive = false;
+    }
+    function hideHelpModal() {
+      document.getElementById("helpModal").style.display = "none";
+      setTimeout(()=>panicActive = true, 200);
+    }
+
+    // --- Recent Cloaks ---
+    function addRecentCloak(url) {
+      let arr = JSON.parse(localStorage.getItem('recentCloaks')||"[]");
+      arr.unshift(url);
+      arr = arr.slice(0,7);
+      localStorage.setItem('recentCloaks', JSON.stringify(arr));
+      renderRecentCloaks();
+    }
+    function renderRecentCloaks() {
+      let arr = JSON.parse(localStorage.getItem('recentCloaks')||"[]");
+      let html = arr.map(u=>`<span class="recent-cloaks-url" onclick="window.open('${u}','_blank')">${u}</span>`).join('');
+      document.getElementById('recentCloaksList').innerHTML = html;
+    }
+
+    // --- Erase All ---
+    function eraseAllLocalData() {
+      if(confirm("Erase ALL local cloak data? (IDs, recent URLs, theme, panic, cloak settings)")) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
+
+    // --- Main Storage ---
+    let movieIdSet = new Set();
+    let tvIdSet = new Set();
+
+    function saveIds() {
+      localStorage.setItem('movieIds', JSON.stringify([...movieIdSet]));
+      localStorage.setItem('tvIds', JSON.stringify([...tvIdSet]));
+    }
+    function loadIds() {
+      try {
+        let movieArr = JSON.parse(localStorage.getItem('movieIds')) || [];
+        let tvArr = JSON.parse(localStorage.getItem('tvIds')) || [];
+        movieIdSet = new Set(movieArr);
+        tvIdSet = new Set(tvArr);
+        updateIdList("movieIdList", movieIdSet);
+        updateIdList("tvIdList", tvIdSet);
+      } catch(e) {
+        movieIdSet = new Set();
+        tvIdSet = new Set();
+      }
+    }
+
+    function updateIdList(logId, idSet) {
+      const list = document.getElementById(logId);
+      list.innerHTML = '';
+      idSet.forEach(id => {
+        const li = document.createElement('li');
+        li.textContent = id;
+        list.appendChild(li);
+      });
+    }
+
+    function showTab(tab) {
+      const tabs = ['movies', 'tvshows', 'search'];
+      tabs.forEach(t => {
+        document.getElementById(t).style.display = (t === tab) ? 'block' : 'none';
+      });
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(button => {
+        button.classList.remove('active');
+      });
+      const activeButton = document.querySelector(`.tab-button[data-tab="${tab}"]`);
+      if (activeButton) activeButton.classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      showTab('movies');
+      toggleSeasonEpisodeInputs();
+      loadIds();
+      setupAutofill('movieMediaId', movieIdSet);
+      setupAutofill('tvMediaId', tvIdSet);
+      setupCloakAutofill();
+      restoreThemeColor();
+      restorePanicSettings();
+      restoreTabCloak();
+      renderRecentCloaks();
+    });
+
+    // --- Autofill ---
+    function setupAutofill(inputId, idSet) {
+      const input = document.getElementById(inputId);
+      const parent = input.closest('.autofill-parent');
+      let dropdown = null;
+      function showDropdown(filtered) {
+        if (dropdown) dropdown.remove();
+        if (!filtered.length) return;
+        dropdown = document.createElement('ul');
+        dropdown.className = 'autofill-dropdown';
+        filtered.forEach(id => {
+          const li = document.createElement('li');
+          li.textContent = id;
+          li.onclick = () => {
+            input.value = id;
+            hideDropdown();
+          };
+          dropdown.appendChild(li);
+        });
+        parent.appendChild(dropdown);
+      }
+      function hideDropdown() {
+        if (dropdown) dropdown.remove();
+        dropdown = null;
+      }
+      input.addEventListener('input', () => {
+        const val = input.value.trim().toLowerCase();
+        let filtered = [...idSet].filter(id => id.toLowerCase().includes(val));
+        showDropdown(filtered);
+      });
+      input.addEventListener('focus', () => {
+        const val = input.value.trim().toLowerCase();
+        let filtered = [...idSet].filter(id => id.toLowerCase().includes(val));
+        showDropdown(filtered);
+      });
+      input.addEventListener('blur', () => {
+        setTimeout(hideDropdown, 120);
+      });
+      parent.addEventListener('keydown', e => {
+        if (e.key === "Escape") hideDropdown();
+      });
+    }
+    // --- Cloak Autofill ---
+    function setupCloakAutofill() {
+      updateCloakAutofill();
+      document.getElementById('cloakMediaId').addEventListener('input', cloakAutofillInputHandler);
+      document.getElementById('cloakMediaId').addEventListener('focus', cloakAutofillInputHandler);
+      document.getElementById('cloakMediaId').addEventListener('blur', function() {
+        setTimeout(hideCloakDropdown, 120);
+      });
+      document.getElementById('idType').addEventListener('change', updateCloakAutofill);
+    }
+    let cloakDropdown = null;
+    function cloakAutofillInputHandler() {
+      const input = document.getElementById('cloakMediaId');
+      const parent = input.closest('.autofill-parent');
+      const type = document.getElementById('idType').value;
+      let idSet = (type === 'tmdb') ? tvIdSet : movieIdSet;
+      const val = input.value.trim().toLowerCase();
+      let filtered = [...idSet].filter(id => id.toLowerCase().includes(val));
+      showCloakDropdown(filtered);
+    }
+    function showCloakDropdown(filtered) {
+      const input = document.getElementById('cloakMediaId');
+      const parent = input.closest('.autofill-parent');
+      hideCloakDropdown();
+      if (!filtered.length) return;
+      cloakDropdown = document.createElement('ul');
+      cloakDropdown.className = 'autofill-dropdown';
+      filtered.forEach(id => {
+        const li = document.createElement('li');
+        li.textContent = id;
+        li.onclick = () => {
+          input.value = id;
+          hideCloakDropdown();
+        };
+        cloakDropdown.appendChild(li);
+      });
+      parent.appendChild(cloakDropdown);
+    }
+    function hideCloakDropdown() {
+      if (cloakDropdown) cloakDropdown.remove();
+      cloakDropdown = null;
+    }
+    function updateCloakAutofill() {
+      cloakAutofillInputHandler();
+    }
+
+    // --- Cloak Features ---
+    function toggleSeasonEpisodeInputs() {
+      const idType = document.getElementById("idType").value;
+      const seasonInput = document.getElementById("cloakSeasonNumber");
+      const episodeInput = document.getElementById("cloakEpisodeNumber");
+      if (idType === "tmdb") {
+        seasonInput.style.display = "inline-block";
+        episodeInput.style.display = "inline-block";
+      } else {
+        seasonInput.style.display = "none";
+        episodeInput.style.display = "none";
+      }
+    }
+
+    function showMedia(id, type) {
+      if (type === "movie") {
+        document.getElementById("movieMediaId").value = id;
+        showTab('movies');
+      } else if (type === "tv") {
+        document.getElementById("tvMediaId").value = id;
+        showTab('tvshows');
+      }
+    }
+
+    function playMovie() {
+      const mediaId = document.getElementById("movieMediaId").value.trim();
+      if (!mediaId) return alert("Please enter a TMDB ID for the movie.");
+      const provider = document.getElementById("movieProvider").value;
+      let url = "";
+      switch (provider) {
+        case "frembed": url = `https://vidsrc.xyz/embed/movie?imdb=${mediaId}`; break;
+        case "superembed": url = `https://embed.su/embed/movie/${mediaId}`; break;
+        case "smashystream": url = `https://vidsrc.net/embed/movie?imdb=${mediaId}`; break;
+        case "autoembed": url = `https://vidsrc.in/embed/movie/${mediaId}`; break;
+        case "upcloud": url = `https://vidsrc.cc/embed/movie/${mediaId}`; break;
+        case "vidsrc": url = `https://vidsrc.to/embed/movie/${mediaId}`; break;
+      }
+      document.getElementById("moviePlayer").src = url;
+      if (!movieIdSet.has(mediaId)) {
+        movieIdSet.add(mediaId);
+        updateIdList("movieIdList", movieIdSet);
+        saveIds();
+      }
+    }
+    function playTvShow() {
+      const mediaId = document.getElementById("tvMediaId").value.trim();
+      const seasonNumber = document.getElementById("seasonNumber").value.trim();
+      const episodeNumber = document.getElementById("episodeNumber").value.trim();
+      if (!mediaId || !seasonNumber || !episodeNumber) return alert("Please enter all details for the TV show.");
+      const provider = document.getElementById("tvProvider").value;
+      let url = "";
+      switch (provider) {
+        case "frembed": url = `https://vidsrc.xyz/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`; break;
+        case "superembed": url = `https://embed.su/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`; break;
+        case "smashystream": url = `https://vidsrc.net/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`; break;
+        case "autoembed": url = `https://vidsrc.in/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`; break;
+        case "upcloud": url = `https://vidsrc.cc/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`; break;
+        case "vidsrc": url = `https://vidsrc.to/embed/tv/${mediaId}/${seasonNumber}/${episodeNumber}`; break;
+      }
+      document.getElementById("tvPlayer").src = url;
+      if (!tvIdSet.has(mediaId)) {
+        tvIdSet.add(mediaId);
+        updateIdList("tvIdList", tvIdSet);
+        saveIds();
+      }
+    }
+    // --- Cloak URL construction ---
+    const apiKey = 'a24c4f9e8a288d266b2453d737f19f54'; 
+    function getCloakUrl(callback) {
+      const idType = document.getElementById("idType").value;
+      const inputId = document.getElementById("cloakMediaId").value.trim();
+      const provider = document.getElementById("cloakProvider").value;
+      const seasonNumber = document.getElementById("cloakSeasonNumber").value.trim();
+      const episodeNumber = document.getElementById("cloakEpisodeNumber").value.trim();
+      if (!inputId) return callback("");
+      if (idType === "tmdb" && seasonNumber && episodeNumber) {
+        let url = "";
+        switch (provider) {
+          case "frembed": url = `https://vidsrc.xyz/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+          case "superembed": url = `https://embed.su/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+          case "smashystream": url = `https://vidsrc.net/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+          case "autoembed": url = `https://vidsrc.in/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+          case "upcloud": url = `https://vidsrc.cc/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+          case "vidsrc": url = `https://vidsrc.to/embed/tv?tmdb=${inputId}&season=${seasonNumber}&episode=${episodeNumber}`; break;
+        }
+        callback(url);
+      } else {
+        if (idType === "tmdb") {
+          fetch(`https://api.themoviedb.org/3/movie/${inputId}?api_key=${apiKey}&append_to_response=external_ids`)
+            .then(response => response.ok ? response.json() : Promise.reject("Invalid TMDb ID or API error"))
+            .then(data => {
+              let imdbId = (data.external_ids && data.external_ids.imdb_id) ? data.external_ids.imdb_id.replace(/^tt/, '') : "";
+              let url = "";
+              switch (provider) {
+                case "frembed": url = `https://vidsrc.xyz/embed/movie?imdb=${imdbId}`; break;
+                case "superembed": url = `https://embed.su/embed/movie/${imdbId}`; break;
+                case "smashystream": url = `https://vidsrc.net/embed/movie?imdb=${imdbId}`; break;
+                case "autoembed": url = `https://vidsrc.in/embed/movie/${imdbId}`; break;
+                case "upcloud": url = `https://vidsrc.cc/embed/movie/${imdbId}`; break;
+                case "vidsrc": url = `https://vidsrc.to/embed/movie/${imdbId}`; break;
+              }
+              callback(url);
+            })
+            .catch(_=>callback(""));
+        } else {
+          let imdbId = inputId.replace(/^tt/, '');
+          let url = "";
+          switch (provider) {
+            case "frembed": url = `https://vidsrc.xyz/embed/movie?imdb=${imdbId}`; break;
+            case "superembed": url = `https://embed.su/embed/movie/${imdbId}`; break;
+            case "smashystream": url = `https://vidsrc.net/embed/movie?imdb=${imdbId}`; break;
+            case "autoembed": url = `https://vidsrc.in/embed/movie/${imdbId}`; break;
+            case "upcloud": url = `https://vidsrc.cc/embed/movie/${imdbId}`; break;
+            case "vidsrc": url = `https://vidsrc.to/embed/movie/${imdbId}`; break;
+          }
+          callback(url);
+        }
+      }
+    }
+    // --- Cloak Launch ---
+    function launchCloak() {
+      getCloakUrl(function(url){
+        if(!url) return alert("Error: Could not build cloak URL");
+        addRecentCloak(url);
+        const win = window.open('about:blank');
+        win.document.write(`
+          <html>
+            <head>
+              <title>Video Player</title>
+              <style>
+                body,html { margin:0; height:100%; overflow:hidden; background:#000; }
+                iframe { border:none; width:100%; height:100%; }
+              </style>
+            </head>`);
+        win.document.close();
+      } catch (error) {
+        alert(`Error: ${error.message}`);
+      }
+    }
+  </script>
+</body>
+</html>
+            
+            
