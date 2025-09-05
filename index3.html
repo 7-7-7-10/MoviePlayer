@@ -238,8 +238,8 @@
       <option value="tmdb">TMDb ID</option>
     </select>
     <input id="cloakMediaId" type="text" placeholder="Enter ID" style="flex: 1 1 200px;" />
-    <input id="seasonNumber" type="number" placeholder="Season" min="1" style="flex: 0 0 100px;" />
-    <input id="episodeNumber" type="number" placeholder="Episode" min="1" style="flex: 0 0 100px;" />
+    <input id="cloakSeasonNumber" type="number" placeholder="Season" min="1" style="flex: 0 0 100px;" />
+    <input id="cloakEpisodeNumber" type="number" placeholder="Episode" min="1" style="flex: 0 0 100px;" />
     <select id="cloakProvider" style="flex: 0 0 180px;">
       <option value="frembed">Vidsrc (.xyz)</option> 
       <option value="vidsrc">Vidsrc (.to)</option>
@@ -291,8 +291,8 @@
     }
     function toggleSeasonEpisodeInputs() {
   const idType = document.getElementById("idType").value;
-  const seasonInput = document.getElementById("seasonNumber");
-  const episodeInput = document.getElementById("episodeNumber");
+  const seasonInput = document.getElementById("cloakSeasonNumber");
+  const episodeInput = document.getElementById("cloakEpisodeNumber");
   if (idType === "tmdb") {
     seasonInput.style.display = "inline-block"; // Show inputs
     episodeInput.style.display = "inline-block";
@@ -383,8 +383,8 @@
       // If IMDb ID entered, strip 'tt' if present
       imdbId = inputId.replace(/^tt/, '');
     }
-    const seasonNumber = document.getElementById("seasonNumber").value.trim();
-const episodeNumber = document.getElementById("episodeNumber").value.trim();
+    const seasonNumber = document.getElementById("cloakSeasonNumber").value.trim();
+const episodeNumber = document.getElementById("cloakEpisodeNumber").value.trim();
 
     // Construct the embed URL based on provider
  let url = "";
