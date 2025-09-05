@@ -258,111 +258,155 @@
     <iframe id="playerFrame" allowfullscreen frameborder="0"></iframe>
     <button id="closeBtn" onclick="closeModal()">✕ Close</button>
   </div>
-  <script>
-    let moviedb = [], tvdb = [];
+<script>
+  let moviedb = [];
+  let tvdb = [];
+  let databasesLoaded = false;
 
-    async function loadDatabases() {
-      const movies = fetch('Movie.json').then(r => r.json()).catch(() => []);
-      const tv = fetch('TV.json').then(r => r.json()).catch(() => []);
-      [moviedb, tvdb] = await Promise.all([movies, tv]);
-    }
-
-    // Build url for movies (imdb) and tv (tmdb)
-    function getMovieUrl(item) {
-      if (item.imdb) {
-        return `https://vidsrc.xyz/embed/movie?imdb=${item.imdb}`;
+  async function loadDatabases() {
+    try {
+      const moviesResp = await fetch('Movie.json');
+      if (moviesResp.ok) {
+        moviedb = await moviesResp.json();
+      } else {
+        moviedb = [];
       }
-      return "";
+    } catch (e) {
+      moviedb = [];
     }
-    function getTvUrl(item, season, episode) {
-      if (item.tmdb) {
-        return `https://vidsrc.xyz/embed/tv?tmdb=${item.tmdb}&season=${season}&episode=${episode}`;
+    try {
+      const tvResp = await fetch('TV.json');
+      if (tvResp.ok) {
+        tvdb = await tvResp.json();
+      } else {
+        tvdb = [];
       }
-      return "";
+    } catch (e) {
+      tvdb = [];
+    }
+    databasesLoaded = true;
+  }
+
+  function getMovieUrl(item) {
+    return item.imdb
+      ? `https://vidsrc.xyz/embed/movie?imdb=${item.imdb}`
+      : "";
+  }
+
+  function getTvUrl(item, season, episode) {
+    return item.tmdb
+      ? `https://vidsrc.xyz/embed/tv?tmdb=${item.tmdb}&season=${season}&episode=${episode}`
+      : "";
+  }
+
+  function openModal(url) {
+    const modal = document.getElementById('playerModal');
+    const frame = document.getElementById('playerFrame');
+    frame.src = url;
+    modal.classList.add('show');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('playerModal');
+    const frame = document.getElementById('playerFrame');
+    modal.classList.remove('show');
+    frame.src = "";
+  }
+
+  function formatIdInfo(imdb, tmdb) {
+    const imdbDisplay = imdb ? imdb : "<span style='color:#888'>N/A</span>";
+    const tmdbDisplay = tmdb ? tmdb : "<span style='color:#888'>N/A</span>";
+    return `<strong>IMDb:</strong> ${imdbDisplay}<br><strong>TMDB:</strong> ${tmdbDisplay}`;
+  }
+
+  async function performSearch() {
+    const query = document.getElementById('searchQuery').value.toLowerCase().trim();
+    const resultsDiv = document.getElementById('results');
+    // Load databases only once
+    if (!databasesLoaded) await loadDatabases();
+
+    // If both databases failed to load, use fallback sample data
+    if ((moviedb.length === 0) && (tvdb.length === 0)) {
+      moviedb = [{ title: "Phoenix Sample Movie", imdb: "tt1234567", tmdb: "10001" }];
+      tvdb = [{ title: "Phoenix Sample TV Show", imdb: "tt9876543", tmdb: "20002" }];
     }
 
-    function openModal(url) {
-      const modal = document.getElementById('playerModal');
-      const frame = document.getElementById('playerFrame');
-      frame.src = url;
-      modal.classList.add('show');
+    if (!query) {
+      resultsDiv.innerHTML = "<div style='text-align:center;color:#ffab40;'>Type a search query to see results.</div>";
+      return;
     }
 
-    function closeModal() {
-      const modal = document.getElementById('playerModal');
-      const frame = document.getElementById('playerFrame');
-      modal.classList.remove('show');
-      frame.src = "";
+    let results = [];
+    results = results.concat(
+      moviedb.filter(item => item.title && item.title.toLowerCase().includes(query))
+             .map(item => ({...item, type: "Movie"}))
+    );
+    results = results.concat(
+      tvdb.filter(item => item.title && item.title.toLowerCase().includes(query))
+          .map(item => ({...item, type: "TV"}))
+    );
+
+    if (results.length === 0) {
+      resultsDiv.innerHTML = "<div style='text-align:center;color:#ff9100;'>No results found.</div>";
+      return;
     }
 
-    function formatIdInfo(imdb, tmdb) {
-      const imdbDisplay = imdb ? imdb : "<span style='color:#888'>N/A</span>";
-      const tmdbDisplay = tmdb ? tmdb : "<span style='color:#888'>N/A</span>";
-      return `<strong>IMDb:</strong> ${imdbDisplay}<br><strong>TMDB:</strong> ${tmdbDisplay}`;
-    }
-
-    async function performSearch() {
-      const query = document.getElementById('searchQuery').value.toLowerCase().trim();
-      const resultsDiv = document.getElementById('results');
-      if (moviedb.length === 0 && tvdb.length === 0) await loadDatabases();
-      if (!query) {
-        resultsDiv.innerHTML = "<div style='text-align:center;color:#ffab40;'>Type a search query to see results.</div>";
-        return;
-      }
-      let results = [];
-      results = results.concat(
-        moviedb.filter(item => item.title && item.title.toLowerCase().includes(query))
-               .map(item => ({...item, type: \"Movie\"}))
-      );
-      results = results.concat(
-        tvdb.filter(item => item.title && item.title.toLowerCase().includes(query))
-            .map(item => ({...item, type: \"TV\"}))
-      );
-      if (results.length === 0) {
-        resultsDiv.innerHTML = "<div style='text-align:center;color:#ff9100;'>No results found.</div>";
-        return;
-      }
-      resultsDiv.innerHTML = "";
-      for (const item of results.slice(0, 40)) {
-        if (item.type === "Movie") {
-          const url = getMovieUrl(item);
-          resultsDiv.innerHTML += `
-            <div class=\"search-item\">\n              <div class=\"search-title\">${item.title}</div>\n              <div class=\"search-type\">🎬 Movie</div>\n              <div class=\"id-info\">\n                ${formatIdInfo(item.imdb, item.tmdb)}\n              </div>\n              <button class=\"play-btn\" onclick=\"openModal('${url}')\">▶ Play</button>\n            </div>\n          `;
-        } else {
-          // TV: ask for season and episode before opening modal
-          resultsDiv.innerHTML += `
-            <div class=\"search-item\">\n              <div class=\"search-title\">${item.title}</div>\n              <div class=\"search-type\">📺 TV Show</div>\n              <div class=\"id-info\">\n                ${formatIdInfo(item.imdb, item.tmdb)}\n              </div>\n              <button class=\"play-btn\" onclick=\"askTvPlay(${item.tmdb})\">▶ Play</button>\n            </div>\n          `;
-        }
+    resultsDiv.innerHTML = "";
+    for (const item of results.slice(0, 40)) {
+      if (item.type === "Movie") {
+        const url = getMovieUrl(item);
+        resultsDiv.innerHTML += `
+          <div class="search-item">
+            <div class="search-title">${item.title}</div>
+            <div class="search-type">🎬 Movie</div>
+            <div class="id-info">
+              ${formatIdInfo(item.imdb, item.tmdb)}
+            </div>
+            <button class="play-btn" onclick="openModal('${url}')">▶ Play</button>
+          </div>
+        `;
+      } else {
+        resultsDiv.innerHTML += `
+          <div class="search-item">
+            <div class="search-title">${item.title}</div>
+            <div class="search-type">📺 TV Show</div>
+            <div class="id-info">
+              ${formatIdInfo(item.imdb, item.tmdb)}
+            </div>
+            <button class="play-btn" onclick="askTvPlay('${item.tmdb}')">▶ Play</button>
+          </div>
+        `;
       }
     }
+  }
 
-    // Prompt for season/episode, then play
-    function askTvPlay(tmdb) {
-      let season = prompt("Enter season number:", "1");
-      if (season === null) return;
-      season = season.replace(/[^0-9]/g, "");
-      if (!season || +season < 1) {
-        alert("Invalid season.");
-        return;
-      }
-      let episode = prompt("Enter episode number:", "1");
-      if (episode === null) return;
-      episode = episode.replace(/[^0-9]/g, "");
-      if (!episode || +episode < 1) {
-        alert("Invalid episode.");
-        return;
-      }
-      // Build URL and open modal
-      const url = `https://vidsrc.xyz/embed/tv?tmdb=${tmdb}&season=${season}&episode=${episode}`;
-      openModal(url);
+  function askTvPlay(tmdb) {
+    let season = prompt("Enter season number:", "1");
+    if (season === null) return;
+    season = season.replace(/[^0-9]/g, "");
+    if (!season || +season < 1) {
+      alert("Invalid season.");
+      return;
     }
+    let episode = prompt("Enter episode number:", "1");
+    if (episode === null) return;
+    episode = episode.replace(/[^0-9]/g, "");
+    if (!episode || +episode < 1) {
+      alert("Invalid episode.");
+      return;
+    }
+    const url = `https://vidsrc.xyz/embed/tv?tmdb=${tmdb}&season=${season}&episode=${episode}`;
+    openModal(url);
+  }
 
+  window.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('results').innerHTML = "<div style='text-align:center;color:#ffab40;'>Type a search query to see results.</div>";
     document.getElementById('searchQuery').addEventListener('keydown', function(e) {
       if (e.key === "Enter") performSearch();
     });
-    window.onload = function() {
-      document.getElementById('results').innerHTML = "<div style='text-align:center;color:#ffab40;'>Type a search query to see results.</div>";
-    };
+    document.querySelector('.input-container button').addEventListener('click', function() {
+      performSearch();
+    });
     document.addEventListener('keydown', function(e) {
       const modal = document.getElementById('playerModal');
       if (modal.classList.contains('show') && e.key === "Escape") closeModal();
@@ -370,6 +414,7 @@
     document.getElementById('playerModal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
     });
-  </script>
+  });
+</script>
 </body>
 </html>
