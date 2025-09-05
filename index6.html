@@ -3,409 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Classroom</title>
-  <link rel="icon" type="image/x-icon" id="mainFavicon" href="https://ssl.gstatic.com/classroom/ic_product_classroom_32.png" />
+  <title id="mainTitle">Classroom</title>
+  <link rel="icon" id="mainFavicon" type="image/x-icon" href="https://ssl.gstatic.com/classroom/ic_product_classroom_32.png" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --accent: #00e5ff;
       --accent2: #00bcd4;
-      --accent-bg: rgba(0,229,255,0.08);
-      --accent-bg2: rgba(0,229,255,0.22);
-      --accent-shadow: 0 0 25px var(--accent);
-      --input-bg: rgba(30,30,30,0.9);
-      --input-border: #00bcd4;
     }
-    body {
-      font-family: 'Orbitron', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #0d0d0d, #1a1a1a 40%, #101820);
-      color: #f0f0f0;
-      overflow-x: hidden;
-      transition: background 0.3s;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-image: linear-gradient(90deg, var(--accent-bg2) 1px, transparent 1px),
-                        linear-gradient(180deg, var(--accent-bg2) 1px, transparent 1px);
-      background-size: 50px 50px;
-      z-index: 0;
-      animation: moveGrid 20s linear infinite;
-    }
-    @keyframes moveGrid {
-      from { transform: translate(0,0); }
-      to { transform: translate(-50px,-50px); }
-    }
-    h1 {
-      text-align: center;
-      margin: 25px 0;
-      font-size: 3.5rem;
-      color: var(--accent);
-      text-shadow: 0 0 15px var(--accent), 0 0 25px var(--accent2);
-      position: relative;
-      z-index: 1;
-      transition: color 0.3s;
-    }
-    .tab-container {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-      z-index: 2;
-      position: relative;
-    }
-    .tab-button {
-      padding: 12px 28px;
-      margin: 0 12px;
-      font-size: 16px;
-      border: 2px solid var(--accent);
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      cursor: pointer;
-      border-radius: 40px;
-      transition: all 0.4s ease;
-      box-shadow: 0 0 12px var(--accent-bg);
-    }
-    .tab-button:hover {
-      transform: scale(1.08);
-      box-shadow: var(--accent-shadow);
-    }
-    .tab-button.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #000;
-      font-weight: bold;
-      text-shadow: none;
-      box-shadow: var(--accent-shadow);
-    }
-    .container {
-      max-width: 850px;
-      margin: 30px auto;
-      padding: 35px;
-      border: 2px solid var(--accent-bg2);
-      border-radius: 20px;
-      background: rgba(15, 15, 15, 0.9);
-      box-shadow: 0 0 40px var(--accent-bg);
-      position: relative;
-      z-index: 1;
-      transition: all 0.4s ease;
-    }
-    .container:hover {
-      transform: scale(1.01);
-      box-shadow: 0 0 50px var(--accent-bg2);
-    }
-    .input-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin-bottom: 25px;
-      justify-content: center;
-    }
-    input, select, button {
-      padding: 12px 16px;
-      font-size: 16px;
-      border-radius: 12px;
-      background: var(--input-bg);
-      color: var(--accent);
-      border: 2px solid var(--input-border);
-      transition: all 0.3s ease;
-      flex: 1;
-    }
-    input:focus, select:focus {
-      outline: none;
-      background: #111;
-      box-shadow: 0 0 15px var(--accent);
-    }
-    button {
-      background: linear-gradient(135deg, var(--accent2), #2196f3);
-      border: none;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      flex: 0 0 auto;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px var(--accent-bg2);
-    }
-    button:hover {
-      transform: scale(1.08);
-      box-shadow: var(--accent-shadow);
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-    }
-    .action-row {
-      display: flex;
-      gap: 12px;
-      margin: 12px 0;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .cloak-setting {
-      padding: 8px 12px;
-      background: var(--accent-bg);
-      border-radius: 9px;
-      color: var(--accent);
-      font-size: 15px;
-      border: 1.5px solid var(--accent2);
-      margin: 0 4px 8px 0;
-      min-width: 160px;
-      transition: background 0.2s;
-    }
-    .cloak-setting:focus {
-      outline: none;
-      background: #222;
-      box-shadow: 0 0 12px var(--accent2);
-    }
-    .cloak-label {
-      color: var(--accent2);
-      font-size: 15px;
-      margin-right: 8px;
-      font-weight: bold;
-    }
-    .cloak-btn {
-      background: linear-gradient(135deg, var(--accent2), var(--accent));
-      color: #000;
-      border: none;
-      font-weight: bold;
-      padding: 8px 18px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px var(--accent-bg2);
-      margin-left: 10px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .cloak-btn:hover {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-      box-shadow: 0 0 20px var(--accent-bg);
-    }
-    iframe {
-      width: 100%;
-      height: 420px;
-      border: 2px solid var(--accent);
-      border-radius: 20px;
-      margin-top: 20px;
-      background: #000;
-      box-shadow: var(--accent-shadow);
-      transition: all 0.4s ease;
-    }
-    iframe:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 40px var(--accent);
-    }
-    .search-results {
-      margin-top: 25px;
-    }
-    .search-item {
-      padding: 15px;
-      border: 2px solid var(--accent);
-      margin: 10px 0;
-      border-radius: 12px;
-      cursor: pointer;
-      background: rgba(20,20,20,0.8);
-      transition: all 0.3s ease;
-    }
-    .search-item:hover {
-      transform: scale(1.05);
-      background: var(--accent);
-      color: #000;
-      font-weight: bold;
-      box-shadow: var(--accent-shadow);
-    }
-    .logged-ids {
-      margin-top: 12px;
-      padding: 18px 20px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364 90%);
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 18px var(--accent-bg);
-      max-height: 140px;
-      overflow-y: auto;
-      user-select: none;
-      color: var(--accent);
-      transition: all 0.3s ease;
-    }
-    .logged-ids:hover {
-      box-shadow: 0 0 36px var(--accent);
-      border-color: var(--accent2);
-      background: linear-gradient(135deg, var(--accent2) 10%, #232f34 90%);
-    }
-    .logged-ids h3 {
-      margin: 0 0 10px 0;
-      font-weight: 700;
-      color: var(--accent);
-      text-shadow: 0 0 8px var(--accent2);
-      letter-spacing: 2px;
-      font-size: 1.12em;
-    }
-    .logged-ids ul {
-      padding-left: 20px;
-      margin: 0;
-      list-style-type: decimal;
-      color: #e6f7ff;
-      font-size: 15px;
-      line-height: 1.38;
-      background: none;
-    }
-    .logged-ids ul li {
-      margin-bottom: 4px;
-      color: var(--accent2);
-      text-shadow: 0 0 6px var(--accent2);
-    }
-    /* --- Autofill dropdown --- */
-    .autofill-dropdown {
-      position: absolute;
-      left: 0;
-      top: calc(100% + 6px);
-      min-width: 180px;
-      background: #181818;
-      border-radius: 9px;
-      box-shadow: 0 0 12px var(--accent);
-      border: 2px solid var(--accent);
-      z-index: 99;
-      padding: 0;
-      margin: 0;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 16px;
-      color: #f6f6f6;
-      animation: autofillFadeIn 0.18s;
-    }
-    @keyframes autofillFadeIn {
-      from {opacity: 0; transform: translateY(-8px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-    .autofill-dropdown li {
-      list-style: none;
-      margin: 0;
-      padding: 10px 22px;
-      cursor: pointer;
-      transition: background 0.18s, color 0.18s;
-      border-bottom: 1px solid var(--accent-bg);
-    }
-    .autofill-dropdown li:last-child {
-      border-bottom: none;
-    }
-    .autofill-dropdown li:hover, .autofill-dropdown li.active {
-      background: linear-gradient(90deg, var(--accent-bg2), var(--accent-bg));
-      color: var(--accent);
-      font-weight: bold;
-      text-shadow: 0 0 8px var(--accent);
-    }
-    .autofill-parent {
-      position: relative;
-      flex: 1;
-      min-width: 180px;
-      display: flex;
-    }
-    /* --- Recent Cloaks --- */
-    .recent-cloaks {
-      margin: 12px 0 0 0;
-      color: var(--accent2);
-      font-size: 15px;
-      max-height: 90px;
-      overflow-y: auto;
-      border-radius: 7px;
-      background: var(--accent-bg);
-      padding: 8px 10px;
-      border: 1px solid var(--accent2);
-    }
-    .recent-cloaks-title {
-      font-weight: bold;
-      color: var(--accent);
-      margin-bottom: 4px;
-      font-size: 15px;
-      text-shadow: 0 0 6px var(--accent2);
-    }
-    .recent-cloaks-url {
-      display: block;
-      color: #fff;
-      margin-bottom: 3px;
-      word-break: break-all;
-      cursor: pointer;
-      text-decoration: underline dotted var(--accent2);
-      transition: color 0.18s;
-    }
-    .recent-cloaks-url:hover {
-      color: var(--accent);
-      background: var(--accent-bg2);
-    }
-    /* --- Modal Help --- */
-    .modal {
-      position: fixed;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(10,30,50,0.85);
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: #181c24;
-      color: #fff;
-      padding: 32px 28px;
-      border-radius: 18px;
-      box-shadow: 0 0 40px var(--accent2);
-      max-width: 440px;
-      width: 98vw;
-      font-size: 18px;
-      position: relative;
-      border: 2px solid var(--accent);
-    }
-    .modal-content h2 {
-      margin-top: 0;
-      color: var(--accent);
-      font-size: 1.4em;
-      text-shadow: 0 0 8px var(--accent2);
-      font-weight: bold;
-    }
-    .modal-close {
-      position: absolute;
-      right: 18px; top: 14px;
-      background: #222;
-      border: none;
-      color: var(--accent2);
-      font-size: 28px;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 44px; height: 38px;
-      font-family: 'Orbitron', sans-serif;
-      font-weight: bold;
-      box-shadow: 0 0 8px var(--accent);
-    }
-    .modal-close:hover {
-      background: var(--accent2);
-      color: #000;
-    }
-    /* --- End Modal Help --- */
-    /* Custom color picker style */
-    .color-picker {
-      appearance: none;
-      border: 2px solid var(--accent2);
-      border-radius: 8px;
-      width: 40px;
-      height: 36px;
-      background: #000;
-      cursor: pointer;
-      margin-right: 8px;
-      margin-left: 2px;
-      transition: box-shadow 0.18s;
-      box-shadow: 0 0 8px var(--accent2);
-    }
-    .color-picker:focus {
-      outline: none;
-      box-shadow: 0 0 20px var(--accent);
-    }
+    body { font-family: 'Orbitron', sans-serif; margin:0; padding:0; background:linear-gradient(135deg,#0d0d0d,#1a1a1a 40%,#101820); color:#f0f0f0; overflow-x:hidden; }
+    body::before { content:""; position:fixed; top:0; left:0; width:100%; height:100%; background-image:linear-gradient(90deg,rgba(0,188,212,0.1) 1px,transparent 1px),linear-gradient(180deg,rgba(0,188,212,0.1) 1px,transparent 1px); background-size:50px 50px; z-index:0; animation:moveGrid 20s linear infinite;}
+    @keyframes moveGrid { from{transform:translate(0,0);} to{transform:translate(-50px,-50px);} }
+    h1 { text-align:center; margin:25px 0; font-size:3.5rem; color:var(--accent); text-shadow:0 0 15px var(--accent),0 0 25px var(--accent2); position:relative; z-index:1; }
+    .tab-container { display:flex; justify-content:center; margin:20px 0; z-index:2; position:relative;}
+    .tab-button { padding:12px 28px; margin:0 12px; font-size:16px; border:2px solid var(--accent); background:linear-gradient(135deg,#0f2027,#203a43,#2c5364); color:#fff; cursor:pointer; border-radius:40px; transition:all 0.4s ease; box-shadow:0 0 12px var(--accent2)88; }
+    .tab-button:hover { transform:scale(1.08); box-shadow:0 0 25px var(--accent);}
+    .tab-button.active { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#000; font-weight:bold; text-shadow:none; box-shadow:0 0 25px var(--accent);}
+    .container { max-width:850px; margin:30px auto; padding:35px; border:2px solid var(--accent)55; border-radius:20px; background:rgba(15,15,15,0.9); box-shadow:0 0 40px var(--accent)22; position:relative; z-index:1; transition:all 0.4s ease;}
+    .container:hover { transform:scale(1.01); box-shadow:0 0 50px var(--accent)44;}
+    .input-container { display:flex; flex-wrap:wrap; gap:16px; margin-bottom:25px; justify-content:center;}
+    input, select, button { padding:12px 16px; font-size:16px; border-radius:12px; background:rgba(30,30,30,0.9); color:var(--accent); border:2px solid var(--accent2); transition:all 0.3s ease; flex:1;}
+    input:focus, select:focus { outline:none; background:#111; box-shadow:0 0 15px var(--accent);}
+    button { background:linear-gradient(135deg,var(--accent2),#2196f3); border:none; color:#000; font-weight:bold; cursor:pointer; flex:0 0 auto; transition:all 0.3s ease; box-shadow:0 0 15px var(--accent2)bb;}
+    button:hover { transform:scale(1.08); box-shadow:0 0 30px var(--accent);}
+    iframe { width:100%; height:420px; border:2px solid var(--accent); border-radius:20px; margin-top:20px; background:#000; box-shadow:0 0 25px var(--accent2)88; transition:all 0.4s ease;}
+    iframe:hover { transform:scale(1.02); box-shadow:0 0 40px var(--accent);}
+    .autofill-parent { position:relative; flex:1; min-width:180px; display:flex; }
+    .autofill-dropdown { position:absolute; left:0; top:calc(100% + 6px); min-width:180px; background:#181818; border-radius:9px; box-shadow:0 0 12px var(--accent); border:2px solid var(--accent); z-index:99; padding:0; margin:0; font-family:'Orbitron',sans-serif; font-size:16px; color:#f6f6f6; animation:autofillFadeIn 0.18s;}
+    @keyframes autofillFadeIn { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+    .autofill-dropdown li { list-style:none; margin:0; padding:10px 22px; cursor:pointer; border-bottom:1px solid var(--accent)22; transition:background 0.18s, color 0.18s;}
+    .autofill-dropdown li:last-child { border-bottom:none;}
+    .autofill-dropdown li:hover { background:linear-gradient(90deg,var(--accent)33,var(--accent2)33); color:var(--accent); font-weight:bold; text-shadow:0 0 8px var(--accent);}
+    .recent-cloaks-url { display:inline-block; margin:4px 8px 4px 0; padding:4px 12px; border-radius:10px; background:linear-gradient(90deg,var(--accent)22,#232f34 80%); color:var(--accent2); cursor:pointer; border:1px solid var(--accent2); font-size:14px; transition:background 0.18s, color 0.18s;}
+    .recent-cloaks-url:hover { background:var(--accent2); color:#000; font-weight:bold; box-shadow:0 0 6px var(--accent);}
+    /* Accordion dropdown for cloak settings */
+    .accordion { border-radius:14px; background:linear-gradient(135deg,#23272a 60%,#203a43 100%); margin:10px 0 22px 0; box-shadow:0 0 22px var(--accent2)33; }
+    .accordion-header { cursor:pointer; padding:18px 20px; font-size:1.14em; color:var(--accent2); font-weight:bold; border:none; background:none; width:100%; text-align:left; transition:background 0.18s;}
+    .accordion-header:hover { background:var(--accent2)15; }
+    .accordion-content { display:none; padding:18px 22px; border-top:1px solid var(--accent2)44;}
+    .accordion.open .accordion-content { display:block; }
+    /* Help Modal */
+    #helpModal { display:none; position:fixed; left:0;top:0;width:100vw;height:100vh;z-index:999; align-items:center; justify-content:center; background:rgba(0,0,0,0.75);}
+    .help-modal-box { background:#212121; border-radius:20px; box-shadow:0 0 40px var(--accent2); padding:40px; width:370px; max-width:90vw; color:var(--accent); font-size:1.18em; text-align:center;}
+    .help-modal-box h2 { margin-top:0; color:var(--accent2);}
+    .help-modal-box button { margin-top:24px;}
+    .logged-ids { margin-top:12px; padding:18px 20px; border-radius:14px; background:linear-gradient(135deg,#0f2027,#203a43,#2c5364 90%); border:2px solid var(--accent); box-shadow:0 0 18px var(--accent2)66; max-height:140px; overflow-y:auto; user-select:none; color:var(--accent); transition:all 0.3s ease;}
+    .logged-ids:hover { box-shadow:0 0 36px var(--accent2)cc; border-color:var(--accent2); background:linear-gradient(135deg,var(--accent2) 10%,#232f34 90%);}
+    .logged-ids h3 { margin:0 0 10px 0; font-weight:700; color:var(--accent); text-shadow:0 0 8px var(--accent2); letter-spacing:2px; font-size:1.12em;}
+    .logged-ids ul { padding-left:20px; margin:0; list-style-type:decimal; color:#e6f7ff; font-size:15px; line-height:1.38; background:none;}
+    .logged-ids ul li { margin-bottom:4px; color:var(--accent2); text-shadow:0 0 6px var(--accent2);}
   </style>
 </head>
 <body>
   <h1 id="mainTitle">🚀 ZXS MOVIE LAUNCHER</h1>
-<div class="tab-container">
-  <button class="tab-button active" data-tab="movies" onclick="showTab('movies')">Movies</button>
-  <button class="tab-button" data-tab="tvshows" onclick="showTab('tvshows')">TV Shows</button>
-  <button class="tab-button" data-tab="search" onclick="showTab('search')">Cloak</button>
-</div>
+  <div class="tab-container">
+    <button class="tab-button active" data-tab="movies" onclick="showTab('movies')">Movies</button>
+    <button class="tab-button" data-tab="tvshows" onclick="showTab('tvshows')">TV Shows</button>
+    <button class="tab-button" data-tab="cloak" onclick="showTab('cloak')">Cloak</button>
+    <button class="tab-button" data-tab="search" onclick="showTab('search')">Search</button>
+  </div>
 
   <!-- Movies Tab -->
   <div id="movies" class="container">
@@ -454,18 +110,18 @@
     </div>
   </div>
   <!-- Cloak Tab -->
-  <div id="search" class="container" style="display: none;">
+  <div id="cloak" class="container" style="display: none;">
     <div class="input-container">
-      <select id="idType" style="flex: 0 0 150px;" onchange="toggleSeasonEpisodeInputs(); updateCloakAutofill();">
+      <select id="idType" style="flex:0 0 150px;" onchange="toggleSeasonEpisodeInputs(); updateCloakAutofill();">
         <option value="imdb">IMDb ID</option>
         <option value="tmdb">TMDb ID</option>
       </select>
       <div class="autofill-parent">
-        <input id="cloakMediaId" type="text" placeholder="Enter ID" style="flex: 1 1 200px;" autocomplete="off"/>
+        <input id="cloakMediaId" type="text" placeholder="Enter ID" style="flex:1 1 200px;" autocomplete="off"/>
       </div>
-      <input id="cloakSeasonNumber" type="number" placeholder="Season" min="1" style="flex: 0 0 100px;" />
-      <input id="cloakEpisodeNumber" type="number" placeholder="Episode" min="1" style="flex: 0 0 100px;" />
-      <select id="cloakProvider" style="flex: 0 0 180px;">
+      <input id="cloakSeasonNumber" type="number" placeholder="Season" min="1" style="flex:0 0 100px;" />
+      <input id="cloakEpisodeNumber" type="number" placeholder="Episode" min="1" style="flex:0 0 100px;" />
+      <select id="cloakProvider" style="flex:0 0 180px;">
         <option value="frembed">Vidsrc (.xyz)</option> 
         <option value="vidsrc">Vidsrc (.to)</option>
         <option value="autoembed">Vidsrc (.in)</option>
@@ -475,57 +131,74 @@
       </select>
       <button onclick="launchCloak()">▶ Launch</button>
     </div>
-    <div class="action-row">
-      <span class="cloak-label">Theme:</span> 
-      <input type="color" id="themeColorPicker" class="color-picker" value="#00e5ff" title="Change Theme Color">
-      <span class="cloak-label">Tab Cloak Title:</span>
-      <input id="cloakTabTitle" class="cloak-setting" type="text" maxlength="32" placeholder="e.g. Math Homework">
-      <span class="cloak-label">Tab Cloak Favicon:</span>
-      <input id="cloakTabFavicon" class="cloak-setting" type="text" maxlength="128" placeholder="Favicon URL">
+
+    <!-- Accordion style dropdown for cloak settings -->
+    <div class="accordion" id="cloakAccordion">
+      <button class="accordion-header" onclick="toggleAccordion('cloakAccordion')">Cloak Settings ⚙️</button>
+      <div class="accordion-content">
+        <div style="display:flex; flex-wrap:wrap; gap:18px; justify-content:center; margin-bottom:20px;">
+          <div>
+            <label>Theme Color: <input id="themeColorPicker" type="color" style="height:36px;width:36px;border-radius:8px;border:2px solid var(--accent2);"></label>
+          </div>
+          <div>
+            <label>Panic Key: <input id="panicKey" type="text" maxlength="1" style="width:38px;text-align:center;"></label>
+          </div>
+          <div>
+            <label>Panic URL: <input id="panicUrl" type="text" placeholder="https://example.com" style="width:170px;"></label>
+          </div>
+          <div>
+            <label>Tab Title: <input id="cloakTabTitle" type="text" placeholder="Classroom"></label>
+          </div>
+          <div>
+            <label>Tab Favicon: <input id="cloakTabFavicon" type="text" placeholder="Favicon URL" style="width:130px;"></label>
+          </div>
+        </div>
+        <div style="display:flex; gap:16px; justify-content:center; margin-bottom:20px;">
+          <button onclick="showHelpModal()">❓ Help</button>
+          <button onclick="eraseAllLocalData()">🗑️ Erase All</button>
+          <button onclick="testPanic()">⚡ Test Panic</button>
+        </div>
+        <div style="margin-top:10px;">
+          <div><strong>Recent Cloak URLs:</strong></div>
+          <div id="recentCloaksList"></div>
+        </div>
+      </div>
     </div>
-    <div class="action-row">
-      <span class="cloak-label">Panic URL:</span>
-      <input id="panicUrl" class="cloak-setting" type="text" maxlength="128" placeholder="e.g. https://google.com">
-      <span class="cloak-label">Panic Key:</span>
-      <input id="panicKey" class="cloak-setting" type="text" maxlength="1" value="`" title="Single key to trigger panic">
-      <button class="cloak-btn" onclick="testPanic()">Test Panic</button>
-      <button class="cloak-btn" onclick="eraseAllLocalData()">Erase All</button>
-      <button class="cloak-btn" onclick="showHelpModal()">Help</button>
+
+    <div id="helpModal">
+      <div class="help-modal-box">
+        <h2>Cloak Tab Features</h2>
+        <ul style="text-align:left; color:#eee;">
+          <li>Theme color picker (changes accent, persists)</li>
+          <li>Panic key (custom key & URL, instantly redirects)</li>
+          <li>Tab cloaking (custom tab title & favicon)</li>
+          <li>Autofill for all ID boxes (click to use logged ID)</li>
+          <li>Recent cloak URLs (click to launch in new tab)</li>
+          <li>Erase all (resets local data/settings)</li>
+        </ul>
+        <button onclick="hideHelpModal()">Close</button>
+      </div>
     </div>
-    <div class="action-row">
-      <button class="cloak-btn" onclick="copyCloakUrl()">Copy Cloak URL</button>
-      <button class="cloak-btn" onclick="openMinimalCloak()">Window Mode</button>
-    </div>
-    <div class="recent-cloaks">
-      <div class="recent-cloaks-title">Recent Cloaks:</div>
-      <div id="recentCloaksList"></div>
-    </div>
-    <p style="text-align:center; font-size: 0.9rem; color: #888;">Opens video in a new tab with cloaked URL (Movies only Rn IMDB)</p>
+    <p style="text-align:center; font-size:0.9rem; color:#888;">Opens video in a new tab with cloaked URL (Movies only Rn IMDB)</p>
   </div>
-  <!-- Modal Help -->
-  <div class="modal" id="helpModal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="hideHelpModal()">×</button>
-      <h2>Cloak Tab Help</h2>
-      <ul>
-        <li><b>Panic Key:</b> Set a key and URL. Press that key anywhere to instantly redirect.</li>
-        <li><b>Theme:</b> Pick a color to change accent and glow.</li>
-        <li><b>Tab Cloak:</b> Change tab title and favicon for stealth.</li>
-        <li><b>Autofill:</b> Saved IDs appear as suggestions.</li>
-        <li><b>Copy Cloak URL:</b> Copies constructed embed URL.</li>
-        <li><b>Window Mode:</b> Opens cloak link in a blank window.</li>
-        <li><b>Erase All:</b> Clears IDs and settings.</li>
-        <li><b>Recent Cloaks:</b> See recent cloak URLs.</li>
-        <li><b>Help:</b> Shows this info popup.</li>
-      </ul>
-      <p style="color: #00e5ff; font-size: 1em; margin-top: 8px;">
-        <b>Shortcuts:</b> Press your panic key anytime for instant redirect.<br>
-        <b>Pro Tip:</b> Change tab title/fav to anything stealthy!
-      </p>
+
+  <!-- Search Tab (iframe) -->
+  <div id="search" class="container" style="display: none;">
+    <div style="margin-bottom:20px;text-align:center;">
+      <label for="searchPageInput" style="color:var(--accent2);font-weight:bold;">Page URL to iframe:</label>
+      <input id="searchPageInput" type="text" style="width:320px;" placeholder="https://example.com" value="https://www.themoviedb.org/">
+      <button onclick="setSearchIframe()">Go</button>
     </div>
+    <iframe id="searchIframe" src="https://www.themoviedb.org/" allowfullscreen></iframe>
   </div>
 
   <script>
+    // --- Accordion ---
+    function toggleAccordion(id) {
+      var acc = document.getElementById(id);
+      acc.classList.toggle("open");
+    }
+
     // --- Theme Color ---
     function setThemeColor(color) {
       document.documentElement.style.setProperty('--accent', color);
@@ -536,7 +209,6 @@
       setThemeColor(this.value);
       localStorage.setItem("themeColor", this.value);
     });
-
     function restoreThemeColor() {
       const color = localStorage.getItem("themeColor") || "#00e5ff";
       setThemeColor(color);
@@ -656,7 +328,7 @@
     }
 
     function showTab(tab) {
-      const tabs = ['movies', 'tvshows', 'search'];
+      const tabs = ['movies', 'tvshows', 'cloak', 'search'];
       tabs.forEach(t => {
         document.getElementById(t).style.display = (t === tab) ? 'block' : 'none';
       });
@@ -902,14 +574,20 @@
                 body,html { margin:0; height:100%; overflow:hidden; background:#000; }
                 iframe { border:none; width:100%; height:100%; }
               </style>
-            </head>`);
+            </head>
+            <body>
+              <iframe src="${url}" allowfullscreen></iframe>
+            </body>
+          </html>
+        `);
         win.document.close();
-      } catch (error) {
-        alert(`Error: ${error.message}`);
-      }
+      });
+    }
+    // --- Search iframe ---
+    function setSearchIframe() {
+      var url = document.getElementById("searchPageInput").value || "https://www.themoviedb.org/";
+      document.getElementById("searchIframe").src = url;
     }
   </script>
 </body>
 </html>
-            
-            
