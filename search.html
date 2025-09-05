@@ -236,13 +236,13 @@
     // Build url for movies (imdb) and tv (tmdb)
     function getMovieUrl(item) {
       if (item.imdb) {
-        return `https://vidsrc.xyz/embed/movie?imdb_id=${item.imdb}`;
+        return `https://vidsrc.xyz/embed/movie?imdb=${item.imdb}`;
       }
       return "";
     }
     function getTvUrl(item, season, episode) {
       if (item.tmdb) {
-        return `https://vidsrc.xyz/embed/tv?tmdb_id=${item.tmdb}&season=${season}&episode=${episode}`;
+        return `https://vidsrc.xyz/embed/tv?tmdb=${item.tmdb}&season=${season}&episode=${episode}`;
       }
       return "";
     }
