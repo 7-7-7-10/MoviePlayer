@@ -490,9 +490,15 @@
     if (theme === 'blue') {
       document.getElementById('main-title').textContent = 'ION | MOVIES';
       document.getElementById('main-header').textContent = 'ION';
-    } else {
+         if (theme === 'orange') {
+      document.getElementById('main-title').textContent = 'Phoenix | MOVIES';
+      document.getElementById('main-header').textContent = 'Phoenix';
+              if (theme === 'red') {
       document.getElementById('main-title').textContent = 'EMBER | MOVIES';
       document.getElementById('main-header').textContent = 'Ember';
+    } else {
+      document.getElementById('main-title').textContent = 'Phoenix | MOVIES';
+      document.getElementById('main-header').textContent = 'Phoenix';
     }
   }
 
