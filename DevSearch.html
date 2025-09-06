@@ -649,13 +649,13 @@ body.theme-midnight .last-playing-block {
 }
 
 body.theme-midnight .theme-btn {
-  background: #222 !important;
-  color: #e0e0e0 !important;
+  background: #111 !important;
+  color: #fff !important;
   outline: none !important;
   box-shadow: none !important;
 }
 body.theme-midnight .theme-btn.midnight.active {
-  outline: 2px solid #e0e0e0 !important;
+  outline: 2px solid #fffbe6 !important;
 }
 
 body.theme-midnight input,
@@ -716,6 +716,22 @@ body.theme-midnight #miniPlayerDock {
   box-shadow: none !important;
   border: 1px solid #222 !important;
 }
+    #perfStatsPanel {
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 18px 30px;
+  margin-bottom: 22px;
+  box-shadow: 0 0 18px #ff910080;
+  color: #ff9100;
+  font-size: 1.15rem;
+  text-align: center;
+  transition: background 0.3s, color 0.3s;
+}
+body.theme-blue #perfStatsPanel { color: #2196f3; }
+body.theme-red #perfStatsPanel { color: #e53935; }
+body.theme-green #perfStatsPanel { color: #34c759; }
+body.theme-void #perfStatsPanel { color: #eaeaea; }
+body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
   </style>
 </head>
 <body class="theme-orange">
@@ -749,6 +765,12 @@ body.theme-midnight #miniPlayerDock {
   <div class="stats-row">
     <span>Total Time Spent:</span> <span id="statsTimeSpent">0h 0m</span>
   </div>
+     <div id="perfStatsPanel" class="stats-panel">
+  <h2>Performance Stats</h2>
+  <div>
+    <span>Page Load Time:</span> <span id="loadTimeStat">...</span>
+  </div>
+</div>
 </div>
 </div>
  
@@ -765,6 +787,20 @@ body.theme-midnight #miniPlayerDock {
   </div>
 
 <script>
+  function showLoadTimeStat() {
+  // Use the browser Performance API for accurate results
+  const timing = performance.timing;
+  let loadTime;
+  if (timing.loadEventEnd && timing.navigationStart) {
+    loadTime = timing.loadEventEnd - timing.navigationStart;
+  } else {
+    // Fallback for modern browsers
+    loadTime = performance.now();
+  }
+  document.getElementById('loadTimeStat').textContent = (loadTime / 1000).toFixed(2) + " s";
+}
+
+window.addEventListener('load', showLoadTimeStat);
   // --- Keyboard Shortcuts for MoviePlayer ---
 (function() {
   let selectedIndex = -1;
