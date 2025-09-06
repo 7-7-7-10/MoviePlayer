@@ -744,7 +744,31 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
 .theme-btn.midnight.active {
   outline: 2px solid #fffbe6 !important;
 }
+.bookmark-btn {
+  margin-left: 12px;
+  padding: 8px 14px;
+  background: #333;
+  color: #ffeb3b;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: bold;
+  transition: background 0.2s, color 0.2s;
+}
+.bookmark-btn:hover {
+  background: #ff9100;
+  color: #fff;
+}
 
+body.theme-blue .bookmark-btn { background: #1565c0; color: #90caf9; }
+body.theme-blue .bookmark-btn:hover { background: #2196f3; color: #fff; }
+body.theme-red .bookmark-btn { background: #b71c1c; color: #ffcdd2; }
+body.theme-red .bookmark-btn:hover { background: #e53935; color: #fff; }
+body.theme-green .bookmark-btn { background: #145c26; color: #aeea00; }
+body.theme-green .bookmark-btn:hover { background: #34c759; color: #fff; }
+body.theme-midnight .bookmark-btn { background: #222; color: #ffd600; }
+body.theme-midnight .bookmark-btn:hover { background: #111; color: #fff; }
   </style>
 </head>
 <body class="theme-orange">
@@ -766,6 +790,10 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
   </div>
   <div id="results" class="search-results"></div>
   <div id="lastPlayingBlock" class="last-playing-block" style="display:none;"></div>
+   <div id="watchlistPanel" class="stats-panel" style="margin-top:36px;">
+  <h2>My Watchlist</h2>
+  <div id="watchlistList"></div>
+</div>
   <div id="recentSearchesBlock" class="recent-searches-block" style="display:none;"></div>
    <div id="statsPanel" class="stats-panel">
   <h2>Statistics</h2>
@@ -803,6 +831,61 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
   </div>
 
 <script>
+  function getWatchlist() {
+  return JSON.parse(localStorage.getItem('watchlist') || '[]');
+}
+
+function saveWatchlist(list) {
+  localStorage.setItem('watchlist', JSON.stringify(list));
+}
+
+function bookmarkItem(encItem) {
+  const item = JSON.parse(decodeURIComponent(encItem));
+  let list = getWatchlist();
+  // Use a unique key (title + type + season/episode if TV)
+  let key = item.type === "TV"
+    ? `${item.title}|TV|S${item.season||""}E${item.episode||""}`
+    : `${item.title}|Movie`;
+  if (list.some(x => x.key === key)) {
+    alert("Already in Watchlist!");
+    return;
+  }
+  list.unshift({ ...item, key });
+  saveWatchlist(list);
+  updateWatchlistPanel();
+}
+
+function removeFromWatchlist(index) {
+  let list = getWatchlist();
+  list.splice(index, 1);
+  saveWatchlist(list);
+  updateWatchlistPanel();
+}
+
+function updateWatchlistPanel() {
+  const panel = document.getElementById('watchlistList');
+  let list = getWatchlist();
+  if (!panel) return;
+  if (!list.length) {
+    panel.innerHTML = `<div style="color:#888;">No items in your Watchlist.</div>`;
+    return;
+  }
+  panel.innerHTML = list.map((item, i) => {
+    let desc = item.type === "Movie"
+      ? `🎬 <strong>${item.title}</strong>`
+      : `📺 <strong>${item.title}</strong> <span style="font-size:0.95em;">S${item.season||"-"}E${item.episode||"-"}</span>`;
+    return `<div style="margin:8px 0;">
+      ${desc}
+      <button class="play-btn" style="margin-left:8px;" onclick="${item.type==='Movie'
+        ? `playMovie('${encodeURIComponent(JSON.stringify(item))}')`
+        : `askTvPlay('${encodeURIComponent(JSON.stringify(item))}')`}">▶ Play</button>
+      <button class="bookmark-btn" style="margin-left:6px;background:#b71c1c;color:#fff;" onclick="removeFromWatchlist(${i})">✕ Remove</button>
+    </div>`;
+  }).join('');
+}
+
+// Call updateWatchlistPanel on page load
+window.addEventListener('DOMContentLoaded', updateWatchlistPanel);
 
   function showLoadTimeStat() {
   // Use the browser Performance API for accurate results
@@ -1049,6 +1132,7 @@ function setTheme(theme) {
       let info = last.type === "Movie"
         ? `<span class="last-playing-title">${typeIcon} Last Played:</span> ${last.title} <button onclick="resumeLastPlaying()">▶ Resume</button>`
         : `<span class="last-playing-title">${typeIcon} Last Played:</span> ${last.title} (S${last.season} E${last.episode}) <button onclick="resumeLastPlaying()">▶ Resume</button> <span style="font-size:0.93em;"></span>`;
+      
       block.innerHTML = info;
     } else {
       block.style.display = "none";
@@ -1153,6 +1237,8 @@ function setTheme(theme) {
               ${formatIdInfo(item.imdb, item.tmdb)}
             </div>
             <button class="play-btn" onclick="playMovie('${encodeURIComponent(JSON.stringify(item))}')">▶ Play</button>
+            <button class="bookmark-btn" onclick="bookmarkItem('${encodeURIComponent(JSON.stringify(item))}')">★ Bookmark</button>
+
           </div>
         `;
       } else {
@@ -1164,6 +1250,7 @@ function setTheme(theme) {
               ${formatIdInfo(item.imdb, item.tmdb)}
             </div>
             <button class="play-btn" onclick="askTvPlay('${encodeURIComponent(JSON.stringify(item))}')">▶ Play</button>
+            <button class="bookmark-btn" onclick="bookmarkItem('${encodeURIComponent(JSON.stringify(item))}')">★ Bookmark</button>
           </div>
         `;
       }
