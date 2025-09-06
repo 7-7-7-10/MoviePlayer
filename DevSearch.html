@@ -744,6 +744,64 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
 .theme-btn.midnight.active {
   outline: 2px solid #fffbe6 !important;
 }
+    .loader-modal {
+  display: none;
+  position: fixed;
+  left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(24,12,4,0.95);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 0.3s;
+}
+.loader-modal.show {
+  display: flex;
+  animation: fadeIn 0.3s;
+}
+.loader-animation {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #ff9100;
+  border-top: 8px solid #222;
+  border-radius: 50%;
+  animation: spinLoader 1s linear infinite;
+  margin-bottom: 24px;
+  box-shadow: 0 0 32px #ff910070;
+}
+@keyframes spinLoader {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+.loader-title {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #ff9100;
+  text-align: center;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px #ff9100, 0 0 32px #ff6f00;
+}
+
+body.theme-blue .loader-modal { background: rgba(10,24,60,0.95);}
+body.theme-blue .loader-animation { border-color: #2196f3; border-top: 8px solid #1565c0;}
+body.theme-blue .loader-title { color: #2196f3; text-shadow: 0 0 12px #2196f3, 0 0 32px #1565c0;}
+
+body.theme-red .loader-modal { background: rgba(44,10,10,0.95);}
+body.theme-red .loader-animation { border-color: #e53935; border-top: 8px solid #b71c1c;}
+body.theme-red .loader-title { color: #e53935; text-shadow: 0 0 12px #e53935, 0 0 32px #b71c1c;}
+
+body.theme-green .loader-modal { background: rgba(10,44,24,0.95);}
+body.theme-green .loader-animation { border-color: #34c759; border-top: 8px solid #145c26;}
+body.theme-green .loader-title { color: #34c759; text-shadow: 0 0 12px #34c759, 0 0 32px #145c26;}
+
+body.theme-void .loader-modal { background: rgba(32,32,32,0.96);}
+body.theme-void .loader-animation { border-color: #666; border-top: 8px solid #222;}
+body.theme-void .loader-title { color: #eaeaea; text-shadow: 0 0 12px #666, 0 0 32px #222;}
+
+body.theme-midnight .loader-modal { background: #121212;}
+body.theme-midnight .loader-animation { border-color: #333; border-top: 8px solid #fff;}
+body.theme-midnight .loader-title { color: #e0e0e0; text-shadow: 0 0 12px #fff, 0 0 32px #222;}
   </style>
 </head>
 <body class="theme-orange">
@@ -789,6 +847,10 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
     </div>
 
   </div>
+  <div id="loaderModal" class="loader-modal">
+  <div class="loader-animation"></div>
+  <div id="loaderTitle" class="loader-title">Loading...</div>
+</div>
   <!-- Modal Player -->
   <div id="playerModal">
     <iframe id="playerFrame" allowfullscreen frameborder="0"></iframe>
@@ -799,6 +861,26 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
   </div>
 
 <script>
+  function openModal(url, title) {
+  const loader = document.getElementById('loaderModal');
+  const loaderTitle = document.getElementById('loaderTitle');
+  const modal = document.getElementById('playerModal');
+  const frame = document.getElementById('playerFrame');
+
+  // Show loader, set title
+  loaderTitle.textContent = title ? `Loading: ${title}` : 'Loading...';
+  loader.classList.add('show');
+  modal.classList.remove('show');
+  frame.src = "";
+
+  // Load iframe, hide loader when ready
+  frame.onload = function() {
+    loader.classList.remove('show');
+    modal.classList.add('show');
+    frame.onload = null; // Remove handler
+  };
+  frame.src = url;
+}
   function showLoadTimeStat() {
   // Use the browser Performance API for accurate results
   const timing = performance.timing;
