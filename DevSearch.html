@@ -801,6 +801,101 @@ body.theme-green::before {
   color: #fff;
 }
 }
+     #phoenixChatBtn {
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    z-index: 9999;
+    background: linear-gradient(90deg, #ff9500 70%, #ffa95c 100%);
+    color: #16110f;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.15rem;
+    border-radius: 14px;
+    padding: 18px 30px 16px 26px;
+    box-shadow: 0 0 28px #ff950088;
+    border: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s, background 0.2s;
+    outline: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  #phoenixChatBtn:hover {
+    box-shadow: 0 0 38px #ff9500dd;
+    background: linear-gradient(90deg, #ffa95c, #ff9500 90%);
+    color: #fff;
+  }
+  #phoenixChatPopup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    bottom: 60px;
+    transform: translateX(-50%);
+    z-index: 10000;
+    background: #241a12;
+    border: 3px solid #ff9500;
+    border-radius: 20px;
+    box-shadow: 0 0 42px #ff9500bb;
+    width: 90vw;
+    max-width: 620px;
+    height: 80vh;
+    max-height: 650px;
+    overflow: hidden;
+    animation: popupUp 0.25s cubic-bezier(.2,.9,.25,1);
+  }
+  @keyframes popupUp {
+    from { opacity: 0; transform: translate(-50%, 40px) scale(0.96);}
+    to { opacity: 1; transform: translate(-50%, 0) scale(1);}
+  }
+  #phoenixChatPopupHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #16110f;
+    color: #ff9500;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 1.07rem;
+    padding: 17px 20px 14px 24px;
+    border-bottom: 2px solid #ff950055;
+  }
+  #phoenixChatPopupClose {
+    background: transparent;
+    border: none;
+    color: #ff9500;
+    font-size: 1.7rem;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 2px 0 2px 12px;
+    transition: color 0.2s;
+  }
+  #phoenixChatPopupClose:hover {
+    color: #ff4500;
+  }
+  #phoenixChatIframe {
+    width: 100%;
+    height: calc(100% - 54px);
+    border: none;
+    background: #16110f;
+  }
+  @media (max-width: 700px) {
+    #phoenixChatPopup {
+      max-width: 99vw;
+      width: 99vw;
+      height: 92vh;
+      bottom: 14px;
+      border-radius: 6vw;
+    }
+    #phoenixChatBtn {
+      left: 12px;
+      bottom: 12px;
+      padding: 13px 20px 13px 16px;
+      font-size: 1.03rem;
+      border-radius: 11px;
+    }
+  }
   </style>
 </head>
 <body class="theme-orange">
@@ -861,8 +956,41 @@ body.theme-green::before {
   <button id="minimizeBtn" title="Minimize player">🗗 Minimize</button>
 </div>
   </div>
+  <button id="phoenixChatBtn" title="Open Phoenix Chat">
+  <i class="fa-solid fa-comments"></i> Chat
+</button>
+<div id="phoenixChatPopup">
+  <div id="phoenixChatPopupHeader">
+    Phoenix Chat
+    <button id="phoenixChatPopupClose" title="Close Chat">&times;</button>
+       <button id="phoenixChatPopupFullscreen" title="Fullscreen Chat" style="margin-right:8px;">⛶</button>
+  </div>
+  <iframe id="phoenixChatIframe" src="https://7-7-7-10.github.io/MoviePlayer/chat.html" allow="microphone"></iframe>
+</div>
 
 <script>
+    document.getElementById('phoenixChatBtn').onclick = function() {
+    document.getElementById('phoenixChatPopup').style.display = 'block';
+  };
+  // Hide popup
+  document.getElementById('phoenixChatPopupClose').onclick = function() {
+    document.getElementById('phoenixChatPopup').style.display = 'none';
+  };
+  // fullscreen button-7-7-7-8
+
+  document.getElementById('phoenixChatPopupFullscreen').onclick = function() {
+  const popup = document.getElementById('phoenixChatPopup');
+  if (popup.requestFullscreen) {
+    popup.requestFullscreen();
+  } else if (popup.webkitRequestFullscreen) {
+    popup.webkitRequestFullscreen();
+  } else if (popup.mozRequestFullScreen) {
+    popup.mozRequestFullScreen();
+  } else if (popup.msRequestFullscreen) {
+    popup.msRequestFullscreen();
+  }
+};
+ 
   document.querySelector('.aboutblank-btn').onclick = function() {
   const iframe = document.getElementById('moviePlayerIframe');
   if (!iframe) return;
