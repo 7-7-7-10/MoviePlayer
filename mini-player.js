@@ -1,11 +1,12 @@
-// --- Mini Player Logic for MoviePlayer ---
+// --- Mini Player Logic FOR IFRAME ---
+
 (function() {
-  // Assumes modal: #playerModal, video: #moviePlayer, minimize button: #minimizeBtn
+  // Assumes modal: #playerModal, iframe: #playerFrame, minimize button: #minimizeBtn
   // Add a minimize button to your modal HTML: <button id="minimizeBtn">_</button>
-  // Add a restore button inside mini player: <button id="restoreBtn">⬆</button>
+  // Add a restore button inside mini player: <button id="restoreBtn">⤴</button>
 
   const modal = document.getElementById('playerModal');
-  const video = document.getElementById('moviePlayer');
+  const iframe = document.getElementById('playerFrame');
   let miniPlayer = null;
 
   function createMiniPlayer() {
@@ -14,8 +15,8 @@
     miniPlayer = document.createElement('div');
     miniPlayer.id = 'miniPlayerDock';
     miniPlayer.innerHTML = `
-      <video id="miniVideo" src="${video.src}" controls style="width:160px;height:90px;background:#000;border-radius:8px;"></video>
-      <button id="restoreBtn" style="margin-top:5px;">⬆</button>
+      <iframe id="miniIframe" src="${iframe.src}" allowfullscreen style="width:160px;height:90px;background:#000;border-radius:8px;border:2px solid #ff9100;"></iframe>
+      <button id="restoreBtn" style="margin-top:5px;">⤴</button>
     `;
     Object.assign(miniPlayer.style, {
       position: 'fixed',
@@ -32,27 +33,15 @@
     });
     document.body.appendChild(miniPlayer);
 
-    // Sync playback time
-    const miniVid = miniPlayer.querySelector('#miniVideo');
-    miniVid.currentTime = video.currentTime;
-    miniVid.volume = video.volume;
-    miniVid.play();
-
-    // Restore button
     miniPlayer.querySelector('#restoreBtn').onclick = restorePlayer;
 
-    // Pause big player, hide modal
-    video.pause();
+    // Hide modal
     modal.classList.remove('show');
   }
 
   function restorePlayer() {
-    if (!miniPlayer) return;
-    // Sync time back
-    video.currentTime = miniPlayer.querySelector('#miniVideo').currentTime;
-    video.volume = miniPlayer.querySelector('#miniVideo').volume;
-    video.play();
-
+    // Restore iframe src
+    iframe.src = miniPlayer.querySelector('#miniIframe').src;
     modal.classList.add('show');
     miniPlayer.remove();
     miniPlayer = null;
