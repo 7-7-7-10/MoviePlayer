@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Phoenix Chat</title>
+    <!-- Orbitron font for futuristic look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --main-orange: #ff9500;
+            --main-orange-glow: #ff950088;
+            --main-bg: #16110f;
+            --main-panel-bg: #241a12;
+            --main-border: #ff9500;
+            --main-border-dim: #ff950055;
+            --main-shadow: 0 0 32px #ff950066, 0 0 8px #ff9500 inset;
+            --main-text: #fffbe6;
+            --main-accent: #ffe1a7;
+            --main-accent2: #ffa95c;
+            --main-accent3: #ff4500;
+            --main-btn-bg: linear-gradient(90deg, #ff9500 70%, #ffa95c 100%);
+            --main-btn-shadow: 0 0 12px #ff950088;
+            --main-btn-hover: linear-gradient(90deg, #ffa95c, #ff9500);
+            --main-input-bg: #19130d;
+            --main-input-border: #ff9500;
+            --main-section-title: #ffcb7d;
+            --main-grid: repeating-linear-gradient(0deg, #ff950015 0px, #ff950015 1px, transparent 1px, transparent 40px),
+                        repeating-linear-gradient(90deg, #ff950015 0px, #ff950015 1px, transparent 1px, transparent 40px);
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Orbitron', 'JetBrains Mono', 'Courier New', monospace;
+            background: var(--main-bg);
+            color: var(--main-text);
+            background-image: var(--main-grid);
+            overflow: hidden;
+        }
+        .phoenix-header {
+            text-align: center;
+            margin-top: 2vh;
+            margin-bottom: 1vh;
+            font-size: 2.8rem;
+            color: var(--main-orange);
+            text-shadow: 0 0 18px var(--main-orange-glow), 0 0 2px #fff;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        .phoenix-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--main-accent);
+            margin-bottom: 2vh;
+            font-weight: 500;
+            text-shadow: 0 0 6px var(--main-orange-glow);
+        }
+        .terminal-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 86vh;
+            background: var(--main-panel-bg);
+            border: 3px solid var(--main-border);
+            border-radius: 18px;
+            box-shadow: var(--main-shadow);
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            margin: 0 auto;
+            animation: bootUp 0.8s ease-out;
+            overflow: hidden;
+        }
+        @keyframes bootUp {
+            from { opacity: 0; transform: scale(0.96);}
+            to { opacity: 1; transform: scale(1);}
+        }
+
+        /* Sidebar */
+        .chat-sidebar {
+            width: 270px;
+            background: var(--main-bg);
+            border-right: 2px solid var(--main-border-dim);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 12px var(--main-orange-glow);
+            z-index: 10;
+        }
+        .sidebar-header {
+            padding: 22px 12px 12px 12px;
+            border-bottom: 1.5px solid var(--main-border-dim);
+            font-size: 1.1rem;
+        }
+        .sidebar-title {
+            color: var(--main-orange);
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1.2px;
+            text-shadow: 0 0 6px var(--main-orange-glow);
+        }
+        .user-info {
+            color: var(--main-accent2);
+            font-size: 0.95rem;
+            margin-top: 8px;
+        }
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 8px;
+        }
+        .chat-section {
+            margin-bottom: 18px;
+        }
+        .section-title {
+            color: var(--main-section-title);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding-left: 8px;
+            letter-spacing: 0.8px;
+        }
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            background: transparent;
+            margin-bottom: 3px;
+            transition: background 0.18s, box-shadow 0.18s;
+            border: 1.5px solid transparent;
+        }
+        .chat-item:hover, .chat-item.active {
+            background: #ff95002a;
+            border-color: var(--main-border);
+            box-shadow: 0 0 12px var(--main-orange-glow);
+        }
+        .chat-icon {
+            width: 18px;
+            text-align: center;
+            color: var(--main-accent2);
+            font-size: 1.15rem;
+        }
+        .chat-name {
+            flex: 1;
+            color: var(--main-text);
+        }
+        .unread-count {
+            background: var(--main-accent3);
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            min-width: 16px;
+            text-align: center;
+            margin-left: 4px;
+            box-shadow: 0 0 6px var(--main-orange-glow);
+        }
+        .online-users {
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.97rem;
+            margin-bottom: 2px;
+            transition: background 0.18s;
+            background: transparent;
+        }
+        .user-item:hover {
+            background: #ff95002a;
+        }
+        .user-status {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--main-orange);
+            box-shadow: 0 0 4px var(--main-orange-glow);
+        }
+        .user-name {
+            color: var(--main-accent);
+            font-weight: 500;
+        }
+        /* Main Chat */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+        .terminal-header {
+            background: var(--main-bg);
+            border-bottom: 2px solid var(--main-border-dim);
+            padding: 22px 32px 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+        }
+        .terminal-title {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 1.15rem;
+        }
+        .terminal-prompt {
+            color: var(--main-orange);
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .terminal-path {
+            color: var(--main-accent2);
+            font-size: 1.1rem;
+        }
+        .terminal-status {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 1rem;
+        }
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--main-orange);
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 6px var(--main-orange-glow);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .terminal-controls {
+            display: flex;
+            gap: 12px;
+        }
+        .control-btn {
+            background: var(--main-btn-bg);
+            border: none;
+            color: var(--main-bg);
+            padding: 7px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: var(--main-btn-shadow);
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+        }
+        .control-btn:hover {
+            background: var(--main-btn-hover);
+            color: #fff;
+        }
+        /* Messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 40px 24px 24px;
+            background: var(--main-panel-bg);
+        }
+        .messages-container::-webkit-scrollbar {
+            width: 10px;
+        }
+        .messages-container::-webkit-scrollbar-thumb {
+            background: var(--main-border-dim);
+            border-radius: 6px;
+        }
+        .message {
+            margin-bottom: 18px;
+            padding: 16px 18px 14px 18px;
+            border-radius: 14px;
+            background: #ff950017;
+            box-shadow: 0 0 18px var(--main-orange-glow);
+            position: relative;
+            transition: background 0.22s;
+            border: 2px solid var(--main-border-dim);
+            animation: messageAppear 0.25s ease-out;
+        }
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .message.self {
+            background: #ff95002b;
+            border-color: var(--main-border);
+        }
+        .message.system-message {
+            background: #ffcb7d22;
+            border-color: var(--main-section-title);
+            color: var(--main-section-title);
+        }
+        .message.dm-message {
+            border-left: 5px solid #ff4500;
+            background: #ff45001a;
+        }
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .message-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-prompt {
+            color: var(--main-orange);
+            font-weight: 700;
+        }
+        .user-name {
+            color: var(--main-accent2);
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+        .dm-indicator {
+            color: #ff4500;
+            font-weight: bold;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+        .message-time {
+            color: #ffcb7dbb;
+            font-size: 0.95rem;
+        }
+        .message-content {
+            color: var(--main-text);
+            line-height: 1.4;
+            word-wrap: break-word;
+            font-size: 1.03rem;
+            padding-left: 2px;
+        }
+        .message-content .link {
+            color: #ffd276;
+            text-decoration: underline;
+            text-shadow: 0 0 5px var(--main-orange-glow);
+        }
+        .message-content .link:hover {
+            color: #ff9500;
+        }
+        .reactions {
+            display: flex;
+            gap: 10px;
+            margin-top: 9px;
+            flex-wrap: wrap;
+        }
+        .reaction-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 9px;
+            border: 1.5px solid var(--main-border);
+            border-radius: 14px;
+            background: var(--main-panel-bg);
+            cursor: pointer;
+            font-size: 1.02rem;
+            color: var(--main-orange);
+            box-shadow: 0 0 7px var(--main-orange-glow);
+            transition: background 0.2s, border 0.2s;
+        }
+        .reaction-pill:hover, .reaction-pill.active {
+            background: #ff95002a;
+            border-color: #ff4500;
+            color: #ff4500;
+        }
+        .reaction-count {
+            color: #ffcb7d;
+        }
+        /* Input */
+        .terminal-input {
+            background: var(--main-panel-bg);
+            border-top: 2px solid var(--main-border-dim);
+            padding: 18px 32px 18px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .input-line {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--main-input-bg);
+            border: 2px solid var(--main-input-border);
+            border-radius: 10px;
+            padding: 10px 16px;
+        }
+        .input-prompt {
+            color: var(--main-orange);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--main-text);
+            font-family: inherit;
+            font-size: 1.08rem;
+        }
+        .input-field::placeholder {
+            color: #ffcb7d88;
+            font-style: italic;
+        }
+        .input-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .action-btn {
+            background: var(--main-btn-bg);
+            border: none;
+            color: var(--main-bg);
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: var(--main-btn-shadow);
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            outline: none;
+        }
+        .action-btn:hover {
+            background: var(--main-btn-hover);
+            color: #fff;
+        }
+        .action-btn.active {
+            color: #ff4500;
+            background: #ff9500;
+        }
+        .action-btn.primary {
+            background: var(--main-btn-bg);
+            color: var(--main-bg);
+            border: 2px solid var(--main-border);
+        }
+        .action-btn.primary:hover {
+            background: #ffcb7d;
+            color: var(--main-bg);
+        }
+        /* Join Modal */
+        .join-modal {
+            position: fixed;
+            inset: 0;
+            background: #16110fe0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        .join-terminal {
+            width: 420px;
+            max-width: 95vw;
+            background: var(--main-panel-bg);
+            border: 3px solid var(--main-border);
+            border-radius: 18px;
+            padding: 32px 28px 28px 28px;
+            box-shadow: var(--main-shadow);
+        }
+        .join-header {
+            color: var(--main-orange);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+            letter-spacing: 1.1px;
+            text-shadow: 0 0 8px var(--main-orange-glow);
+        }
+        .join-description {
+            color: var(--main-accent2);
+            font-size: 1.1rem;
+            margin-bottom: 22px;
+            line-height: 1.35;
+            text-align: center;
+        }
+        .join-input {
+            width: 100%;
+            background: var(--main-input-bg);
+            border: 2px solid var(--main-border);
+            border-radius: 10px;
+            padding: 17px;
+            color: var(--main-text);
+            font-family: inherit;
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            outline: none;
+        }
+        .join-input::placeholder {
+            color: #ffcb7d88;
+        }
+        .join-actions {
+            display: flex;
+            gap: 14px;
+        }
+        .join-btn {
+            flex: 1;
+            background: var(--main-btn-bg);
+            color: var(--main-bg);
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1.08rem;
+            box-shadow: var(--main-btn-shadow);
+            transition: background 0.2s, color 0.2s;
+        }
+        .join-btn:hover {
+            background: var(--main-btn-hover);
+            color: #fff;
+        }
+        .demo-btn {
+            background: transparent;
+            color: var(--main-accent2);
+            border: 2px solid var(--main-border);
+            padding: 13px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1.08rem;
+            transition: color 0.2s, border 0.2s;
+        }
+        .demo-btn:hover {
+            color: var(--main-orange);
+            border-color: var(--main-orange);
+        }
+        .reaction-menu {
+            position: fixed;
+            z-index: 9999;
+            display: flex;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 18px;
+            background: var(--main-panel-bg);
+            border: 2px solid var(--main-border);
+            box-shadow: var(--main-shadow);
+        }
+        .menu-btn {
+            background: transparent;
+            border: 2px solid var(--main-border);
+            color: var(--main-orange);
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: border 0.2s, color 0.2s;
+        }
+        .menu-btn:hover {
+            border-color: #ff4500;
+            color: #ff4500;
+            transform: scale(1.09);
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .terminal-container {
+                height: 99vh;
+                border-radius: 0;
+                margin: 0;
+            }
+            .chat-sidebar {
+                width: 210px;
+            }
+            .messages-container {
+                padding: 18px 15px 16px 10px;
+            }
+            .terminal-header, .terminal-input {
+                padding: 14px 12px;
+            }
+        }
+        @media (max-width: 650px) {
+            .terminal-container {
+                flex-direction: column;
+                height: 100vh;
+            }
+            .chat-sidebar {
+                width: 100vw;
+                border-right: none;
+                border-bottom: 2px solid var(--main-border-dim);
+                flex-direction: row;
+                overflow-x: auto;
+                min-height: 90px;
+                max-height: 110px;
+            }
+            .chat-main {
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phoenix-header">Phoenix Chat</div>
+    <div class="phoenix-subtitle">Unblocked. – Unstoppable. – Unbreakable.</div>
+    <div class="terminal-container" id="app">
+        <!-- Sidebar -->
+        <div class="chat-sidebar" id="chatSidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">Phoenix Chat</div>
+                <div class="user-info" id="sidebarUserInfo">connecting...</div>
+            </div>
+            <div class="chat-list">
+                <div class="chat-section">
+                    <div class="section-title">Channels</div>
+                    <div class="chat-item active" data-chat-type="public" data-chat-id="public">
+                        <div class="chat-icon"><i class="fa-solid fa-hashtag"></i></div>
+                        <div class="chat-name">public</div>
+                    </div>
+                </div>
+                <div class="chat-section">
+                    <div class="section-title">Direct Messages</div>
+                    <div id="dmList"></div>
+                </div>
+                <div class="chat-section">
+                    <div class="section-title">Online Users</div>
+                    <div class="online-users" id="onlineUsersList"></div>
+                </div>
+            </div>
+        </div>
+        <!-- Main Chat -->
+        <div class="chat-main">
+            <header class="terminal-header">
+                <div class="terminal-title">
+                    <span class="terminal-prompt">user@phoenix:~$</span>
+                    <span class="terminal-path">/chat/<span id="currentChatDisplay">public</span></span>
+                </div>
+                <div class="terminal-status">
+                    <div class="status-indicator">
+                        <div class="status-dot" id="onlineDot"></div>
+                        <span id="userCount">0</span> users
+                    </div>
+                    <div class="terminal-controls">
+                        <button class="control-btn" id="btnInvite" title="Copy invite link">
+                            <i class="fa-solid fa-link"></i> Invite
+                        </button>
+                        <button class="control-btn" id="btnLeave" title="Disconnect">
+                            <i class="fa-solid fa-power-off"></i> Leave
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <main class="messages-container" id="messages" aria-live="polite"></main>
+            <div class="terminal-input">
+                <div class="input-line">
+                    <span class="input-prompt">></span>
+                    <input 
+                        id="messageInput" 
+                        class="input-field" 
+                        placeholder="Type your message and press Enter..."
+                        autocomplete="off"
+                    />
+                </div>
+                <div class="input-actions">
+                    <button class="action-btn" id="micButton" title="Voice input">
+                        <i id="micIcon" class="fa-solid fa-microphone-slash"></i>
+                    </button>
+                    <button class="action-btn primary" id="sendBtn" title="Send">
+                        <i class="fa-solid fa-paper-plane"></i> Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Join Modal -->
+    <div class="join-modal" id="joinModal">
+        <div class="join-terminal">
+            <div class="join-header">$ connect --user</div>
+            <div class="join-description">
+                Enter your username to connect to Phoenix Chat<br>
+                You'll be placed in the public room automatically.
+            </div>
+            <input 
+                id="usernameInput" 
+                class="join-input"
+                type="text" 
+                placeholder="username (alphanumeric only)" 
+                maxlength="24"
+                autofocus 
+            />
+            <div class="join-actions">
+                <button class="join-btn" id="joinBtn">Connect</button>
+                <button class="demo-btn" id="demoBtn">Demo</button>
+            </div>
+        </div>
+    </div>
+    <!-- Reaction Menu -->
+    <div id="reactionMenu" class="reaction-menu" style="display:none">
+        <button class="menu-btn" data-reaction="❤️">❤️</button>
+        <button class="menu-btn" data-reaction="👍">👍</button>
+    </div>
+  
+      <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
+    <script>
+        /***** Config & state *****/ 
+        const CLIENT_ID = "aSEKMcR4GsEZONob";
+        let drone = null, room = null, clientId = null;
+        let userName = "", roomCode = "";
+        let recognition = null, isRecording = false;
+        let currentChatType = 'public'; // 'public' or 'dm'
+        let currentChatId = 'public'; // room name or username for DM
+        let onlineUsers = new Map(); // userId -> userData
+        let dmConversations = new Map(); // username -> messages
+        let unreadCounts = new Map(); // chatId -> count
+
+        // DOM refs
+        const joinModal = document.getElementById('joinModal');
+        const joinBtn = document.getElementById('joinBtn');
+        const demoBtn = document.getElementById('demoBtn');
+        const usernameInput = document.getElementById('usernameInput');
+        const sidebarUserInfo = document.getElementById('sidebarUserInfo');
+        const currentChatDisplay = document.getElementById('currentChatDisplay');
+        const messagesEl = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const micBtn = document.getElementById('micButton');
+        const micIcon = document.getElementById('micIcon');
+        const userCountEl = document.getElementById('userCount');
+        const reactionMenu = document.getElementById('reactionMenu');
+        const onlineUsersList = document.getElementById('onlineUsersList');
+        const dmList = document.getElementById('dmList');
+
+        // dedupe set: prevents double-render of same message
+        const seenMessageIds = new Set();
+        // reaction map: messageId -> { emoji -> Set(actorId) }
+        const reactionsMap = {};
+
+        /***** Helpers *****/
+        function generateSiteRoomCode(){
+            // Use hostname to create unique room per site deployment
+            const hostname = window.location.hostname || 'localhost';
+            return hostname.replace(/[^a-zA-Z0-9]/g, '_') + '_chat';
+        }
+
+        function uid(){
+            return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8);
+        }
+
+        function escapeHtml(s){
+            return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[c]));
+        }
+
+        function formatLinks(text){
+            const urlPattern = /(https?:\/\/[^\s]+)/g;
+            return escapeHtml(text).replace(urlPattern, url => `<a class="link" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`);
+        }
+
+        function formatTime(iso){
+            try{
+                const d = iso ? new Date(iso) : new Date();
+                return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            }catch(e){
+                return '';
+            }
+        }
+
+        function parseCommand(text) {
+            if (text.startsWith('/dm ')) {
+                const parts = text.slice(4).split(' ');
+                const targetUser = parts[0];
+                const message = parts.slice(1).join(' ');
+                return { type: 'dm', target: targetUser, message };
+            }
+            if (text === '/users') {
+                return { type: 'users' };
+            }
+            if (text === '/public') {
+                return { type: 'public' };
+            }
+            return { type: 'public', message: text };
+        }
+
+        function showUserList() {
+            const users = Array.from(onlineUsers.values()).map(u => u.name).join(', ');
+            addMessageToDOM({
+                id: uid(),
+                name: 'System',
+                text: `Online users: ${users || 'none'}. Use /dm username message to send direct message.`,
+                timestamp: new Date().toISOString()
+            }, false);
+        }
+
+        function setDMMode(targetUser) {
+            dmMode = true;
+            dmTarget = targetUser;
+            messageInput.placeholder = `DM to ${targetUser} (type /public to return to public chat)`;
+            messageInput.style.borderColor = '#ff6b6b';
+            addMessageToDOM({
+                id: uid(),
+                name: 'System',
+                text: `Now in DM mode with ${targetUser}. Messages will be private.`,
+                timestamp: new Date().toISOString()
+            }, false);
+        }
+
+        function exitDMMode() {
+            dmMode = false;
+            dmTarget = null;
+            messageInput.placeholder = 'Type a message and press Enter — or use the mic';
+            messageInput.style.borderColor = '';
+            addMessageToDOM({
+                id: uid(),
+                name: 'System',
+                text: 'Returned to public chat.',
+                timestamp: new Date().toISOString()
+            }, false);
+        }
+
+        function pickAvatarBg(name){
+            const colors = ['linear-gradient(135deg,#ff9a9e,#fecfef)','linear-gradient(135deg,#ffd7a8,#ffb3a7)','linear-gradient(135deg,#cfe9ff,#aabfff)','linear-gradient(135deg,#b7ffda,#9be7d1)','linear-gradient(135deg,#e6d3ff,#c9b6ff)','linear-gradient(135deg,#ffd1f3,#ffb3e6)'];
+            return colors[(name||'U').charCodeAt(0) % colors.length];
+        }
+
+        function switchToChat(chatType, chatId) {
+            currentChatType = chatType;
+            currentChatId = chatId;
+            
+            // Update UI
+            document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+            const activeItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+            if (activeItem) activeItem.classList.add('active');
+            
+            currentChatDisplay.textContent = chatType === 'public' ? 'public' : `dm:${chatId}`;
+            
+            // Clear messages and load chat history
+            messagesEl.innerHTML = '';
+            seenMessageIds.clear();
+            
+            if (chatType === 'dm' && dmConversations.has(chatId)) {
+                const messages = dmConversations.get(chatId);
+                messages.forEach(msg => addMessageToDOM(msg, msg.name === userName));
+            }
+            
+            // Clear unread count
+            unreadCounts.set(chatId, 0);
+            updateUnreadCount(chatId, 0);
+            
+            // Update input placeholder
+            messageInput.placeholder = chatType === 'public' ? 
+                'type message and press enter...' : 
+                `message @${chatId}...`;
+        }
+
+        function updateUnreadCount(chatId, count) {
+            const chatItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+            if (!chatItem) return;
+            
+            let badge = chatItem.querySelector('.unread-count');
+            if (count > 0) {
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'unread-count';
+                    chatItem.appendChild(badge);
+                }
+                badge.textContent = count;
+            } else if (badge) {
+                badge.remove();
+            }
+        }
+
+        function addDMConversation(username) {
+            if (dmConversations.has(username)) return;
+            
+            dmConversations.set(username, []);
+            
+            const dmItem = document.createElement('div');
+            dmItem.className = 'chat-item';
+            dmItem.setAttribute('data-chat-type', 'dm');
+            dmItem.setAttribute('data-chat-id', username);
+            dmItem.innerHTML = `
+                <div class="chat-icon"><i class="fa-solid fa-user"></i></div>
+                <div class="chat-name">${username}</div>
+            `;
+            
+            dmItem.addEventListener('click', () => switchToChat('dm', username));
+            dmList.appendChild(dmItem);
+        }
+
+        function updateOnlineUsers(members) {
+            onlineUsers.clear();
+            onlineUsersList.innerHTML = '';
+            
+            if (!members) return;
+            
+            members.forEach(member => {
+                if (member.clientData && member.clientData.name && member.clientData.name !== userName) {
+                    const username = member.clientData.name;
+                    onlineUsers.set(member.id, { username, id: member.id });
+                    
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <div class="user-status"></div>
+                        <div class="user-name">${username}</div>
+                    `;
+                    
+                    userItem.addEventListener('click', () => {
+                        addDMConversation(username);
+                        switchToChat('dm', username);
+                    });
+                    
+                    onlineUsersList.appendChild(userItem);
+                }
+            });
+            
+            userCountEl.textContent = members.length;
+        }
+
+        /***** DOM: add message (idempotent) *****/
+        function addMessageToDOM(data, isSelf=false){
+            // every message must have an id; skip if we've seen it
+            if(!data || !data.id) return;
+            if(seenMessageIds.has(data.id)) return;
+            seenMessageIds.add(data.id);
+
+            const mid = data.id;
+            const wrap = document.createElement('div');
+            wrap.className = 'message' + (isSelf ? ' self' : '');
+            if (data.isDM) wrap.classList.add('dm-message');
+            if (data.type === 'system') wrap.classList.add('system-message');
+            wrap.setAttribute('data-mid', mid);
+            wrap.setAttribute('tabindex', '-1');
+
+            const messageHeader = document.createElement('div');
+            messageHeader.className = 'message-header';
+            
+            const userSection = document.createElement('div');
+            userSection.className = 'message-user';
+            userSection.innerHTML = `
+                <span class="user-prompt">$</span>
+                <span class="user-name">${escapeHtml(data.name || 'Unknown')}</span>
+                ${data.isDM ? '<span class="dm-indicator">[DM]</span>' : ''}
+            `;
+            
+            const timeSection = document.createElement('div');
+            timeSection.className = 'message-time';
+            timeSection.textContent = formatTime(data.timestamp);
+            
+            messageHeader.appendChild(userSection);
+            messageHeader.appendChild(timeSection);
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = formatLinks(data.text || '');
+
+            const reactionsHolder = document.createElement('div');
+            reactionsHolder.className = 'reactions';
+            reactionsHolder.setAttribute('data-mid', mid);
+
+            wrap.appendChild(messageHeader);
+            wrap.appendChild(content);
+            wrap.appendChild(reactionsHolder);
+
+            attachReactionTriggers(wrap);
+            messagesEl.appendChild(wrap);
+            messagesEl.scrollTop = messagesEl.scrollHeight + 200;
+
+            // render pre-existing reactions if any
+            if(reactionsMap[mid]) renderReactions(mid);
+        }
+
+        function renderReactions(mid){
+            const holder = messagesEl.querySelector('.reactions[data-mid="'+mid+'"]');
+            if(!holder) return;
+            holder.innerHTML = '';
+            const map = reactionsMap[mid] || {};
+            for(const emoji of Object.keys(map)){
+                const users = map[emoji];
+                const count = users.size;
+                if(count <= 0) continue;
+                const pill = document.createElement('div');
+                pill.className = 'reaction-pill';
+                if(users.has(clientId)) pill.classList.add('active');
+                pill.innerHTML = `<span class="reaction-emoji">${emoji}</span><span class="reaction-count">${count}</span>`;
+                pill.addEventListener('click', (e)=>{
+                    e.stopPropagation();
+                    toggleReaction(mid, emoji);
+                });
+                holder.appendChild(pill);
+            }
+            holder.animate([{opacity:0.0, transform:'translateY(6px)'},{opacity:1, transform:'translateY(0)'}], {duration:180, easing:'cubic-bezier(.2,.9,.25,1)'});
+        }
+
+        function toggleReaction(mid, emoji){
+            if(!mid || !emoji) return;
+            if(!reactionsMap[mid]) reactionsMap[mid] = {};
+            if(!reactionsMap[mid][emoji]) reactionsMap[mid][emoji] = new Set();
+            const users = reactionsMap[mid][emoji];
+            const already = users.has(clientId);
+            if(already) users.delete(clientId);
+            else users.add(clientId);
+            renderReactions(mid);
+            // publish reaction event (actor = clientId)
+            if(drone && room){
+                drone.publish({
+                    room: `observable-${roomCode}`,
+                    message: {
+                        type:'reaction',
+                        messageId: mid,
+                        reaction: emoji,
+                        actor: clientId,
+                        timestamp: new Date().toISOString()
+                    }
+                });
+            }
+        }
+
+        function handleIncomingReaction(payload){
+            if(!payload || !payload.messageId || !payload.reaction) return;
+            const mid = payload.messageId;
+            const emoji = payload.reaction;
+            const actor = payload.actor || payload.actorId || 'remote';
+            if(!reactionsMap[mid]) reactionsMap[mid] = {};
+            if(!reactionsMap[mid][emoji]) reactionsMap[mid][emoji] = new Set();
+            reactionsMap[mid][emoji].add(actor);
+            renderReactions(mid);
+        }
+
+        /***** Reaction menu triggers (right-click / long-press) *****/
+        function attachReactionTriggers(msgEl){
+            let longpressTimer = null;
+            let startCoords = null;
+            function openMenuAt(x,y, mid){
+                reactionMenu.style.display = 'flex';
+                reactionMenu.style.left = (x - 8) + 'px';
+                reactionMenu.style.top = (y - 52) + 'px';
+                reactionMenu.setAttribute('data-mid', mid);
+            }
+            function closeMenu(){
+                reactionMenu.style.display = 'none';
+                reactionMenu.removeAttribute('data-mid');
+            }
+            msgEl.addEventListener('contextmenu', (e)=>{
+                e.preventDefault();
+                const mid = msgEl.getAttribute('data-mid');
+                openMenuAt(e.clientX, e.clientY, mid);
+            });
+            msgEl.addEventListener('touchstart', (e)=>{
+                if(e.touches.length > 1) return;
+                startCoords = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                longpressTimer = setTimeout(()=>{
+                    const mid = msgEl.getAttribute('data-mid');
+                    openMenuAt(startCoords.x, startCoords.y, mid);
+                }, 600);
+            }, {passive:true});
+            ['touchend','touchmove','touchcancel'].forEach(ev => msgEl.addEventListener(ev, ()=> {
+                if(longpressTimer){
+                    clearTimeout(longpressTimer);
+                    longpressTimer = null;
+                }
+            }, {passive:true}));
+            // close on outside click / Escape
+            document.addEventListener('click', (e)=> {
+                if(reactionMenu.style.display !== 'none' && !reactionMenu.contains(e.target)) closeMenu();
+            });
+            document.addEventListener('keydown', (e)=> {
+                if(e.key === 'Escape') closeMenu();
+            });
+        }
+
+        reactionMenu.addEventListener('click', (e)=>{
+            const btn = e.target.closest('button[data-reaction]');
+            if(!btn) return;
+            const emoji = btn.getAttribute('data-reaction');
+            const mid = reactionMenu.getAttribute('data-mid');
+            if(mid && emoji) toggleReaction(mid, emoji);
+            reactionMenu.style.transform = 'scale(.98)';
+            setTimeout(()=> {
+                reactionMenu.style.display = 'none';
+                reactionMenu.style.transform = '';
+            }, 120);
+        });
+
+        /***** Connect to ScaleDrone with dedupe rules *****/
+        function connectToRoom(){
+            drone = new ScaleDrone(CLIENT_ID, {
+                data: { name: userName }
+            });
+
+            drone.on('open', (err) => {
+                if(err){
+                    alert('Connection error: ' + err);
+                    return;
+                }
+                clientId = drone.clientId;
+                // subscribe
+                room = drone.subscribe(`observable-${roomCode}`);
+                room.on('open', (err) => {
+                    if(err){
+                        alert('Room subscription error: ' + err);
+                        return;
+                    }
+                    // announce join
+                    drone.publish({
+                        room: `observable-${roomCode}`,
+                        message: {
+                            type:'join',
+                            name:userName,
+                            timestamp:new Date().toISOString()
+                        }
+                    });
+                });
+
+                // main incoming handler
+                room.on('data', (data, member) => {
+                    if(!data) return;
+                    
+                    // reaction event
+                    if(data.type === 'reaction'){
+                        const payload = {
+                            messageId: data.messageId || data.messageId,
+                            reaction: data.reaction,
+                            actor: data.actor || member?.id || 'remote',
+                            timestamp: data.timestamp
+                        };
+                        handleIncomingReaction(payload);
+                        return;
+                    }
+
+                    // join notices (optional)
+                    if(data.type === 'join'){
+                        showTransient(`${data.name} joined`);
+                        return;
+                    }
+
+                    // DM message
+                    if(data.type === 'dm'){
+                        const senderName = data.name;
+                        const targetName = data.target;
+                        
+                        // Only show if it's for us or from us
+                        if(targetName === userName || senderName === userName) {
+                            const chatPartner = senderName === userName ? targetName : senderName;
+                            
+                            // Add to DM conversation
+                            if(!dmConversations.has(chatPartner)) {
+                                addDMConversation(chatPartner);
+                            }
+                            
+                            const dmMessage = {
+                                ...data,
+                                isDM: true
+                            };
+                            
+                            dmConversations.get(chatPartner).push(dmMessage);
+                            
+                            // Show message if we're in this DM chat
+                            if(currentChatType === 'dm' && currentChatId === chatPartner) {
+                                addMessageToDOM(dmMessage, senderName === userName);
+                            } else {
+                                // Update unread count
+                                const currentUnread = unreadCounts.get(chatPartner) || 0;
+                                unreadCounts.set(chatPartner, currentUnread + 1);
+                                updateUnreadCount(chatPartner, currentUnread + 1);
+                            }
+                        }
+                        return;
+                    }
+
+                    // normal chat message — must have id
+                    if(data.id){
+                        // Only show public messages when in public chat
+                        if(currentChatType === 'public') {
+                            if(seenMessageIds.has(data.id)) {
+                                return;
+                            }
+                            addMessageToDOM(data, false);
+                        }
+                        return;
+                    }
+                });
+
+                room.on('member_join', (m) => updateOnlineUsers(room.members));
+                room.on('member_leave', (m) => updateOnlineUsers(room.members));
+                room.on('members', (m) => updateOnlineUsers(m));
+            });
+
+            drone.on('close', () => showTransient('Disconnected', true));
+            drone.on('error', (err) => showTransient('Connection error', true));
+        }
+
+        /***** Send message (adds id to seen set AFTER local render so local echo shows) *****/
+        function sendMessage(){
+            const text = messageInput.value.trim();
+            if(!text) return;
+
+            const id = uid();
+            const timestamp = new Date().toISOString();
+
+            if(currentChatType === 'public') {
+                const payload = {
+                    id,
+                    text,
+                    name: userName,
+                    timestamp
+                };
+
+                // publish and local echo
+                if(drone && room){
+                    drone.publish({
+                        room: `observable-${roomCode}`,
+                        message: payload
+                    });
+                }
+
+                addMessageToDOM(payload, true);
+                seenMessageIds.add(id);
+            } else if(currentChatType === 'dm') {
+                const dmPayload = {
+                    id,
+                    type: 'dm',
+                    text,
+                    name: userName,
+                    target: currentChatId,
+                    timestamp,
+                    isDM: true
+                };
+
+                // publish DM
+                if(drone && room){
+                    drone.publish({
+                        room: `observable-${roomCode}`,
+                        message: dmPayload
+                    });
+                }
+
+                // Add to local DM conversation
+                if(!dmConversations.has(currentChatId)) {
+                    addDMConversation(currentChatId);
+                }
+                dmConversations.get(currentChatId).push(dmPayload);
+                
+                addMessageToDOM(dmPayload, true);
+                seenMessageIds.add(id);
+            }
+
+            messageInput.value = '';
+            messageInput.focus();
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keydown', (e)=>{
+            if(e.key === 'Enter' && !e.shiftKey){
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        /***** Transient toast *****/
+        function showTransient(text, danger=false){
+            const t = document.createElement('div');
+            t.className = 'typing';
+            t.style.position = 'fixed';
+            t.style.right = '22px';
+            t.style.bottom = '22px';
+            t.style.zIndex = '160';
+            t.style.background = danger ? 'linear-gradient(90deg,#ff6b6b33,#ff6b6b22)' : 'linear-gradient(90deg,#3174ff22,#73b6ff11)';
+            t.style.padding = '10px 14px';
+            t.style.borderRadius='12px';
+            t.style.color='#eaf2ff';
+            t.textContent = text;
+            document.body.appendChild(t);
+            setTimeout(()=> t.style.opacity = '0', 2200);
+            setTimeout(()=> t.remove(), 2600);
+        }
+
+        // ... existing code for speech recognition ...
+
+        /***** Basic speech recognition (unchanged) *****/
+        function initSpeech(){
+            if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
+                micIcon.className = 'fa-solid fa-microphone-slash';
+                micBtn.disabled = true;
+                micBtn.title = 'Speech recognition not supported';
+                return;
+            }
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRec();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            recognition.onstart = ()=> {
+                isRecording = true;
+                micIcon.className = 'fa-solid fa-microphone';
+                micBtn.classList.add('active');
+            };
+            recognition.onresult = (e)=>{
+                const txt = e.results[0][0].transcript;
+                messageInput.value = txt;
+                sendMessage();
+            };
+            recognition.onerror = ()=> {
+                showTransient('Speech error');
+                stopRecognition();
+            };
+            recognition.onend = ()=> stopRecognition();
+        }
+
+        function startRecognition(){
+            if(!recognition) initSpeech();
+            try{
+                recognition.start();
+            }catch(e){}
+        }
+
+        function stopRecognition(){
+            isRecording = false;
+            micIcon.className = 'fa-solid fa-microphone-slash';
+            micBtn.classList.remove('active');
+            try{
+                recognition && recognition.stop();
+            }catch(e){}
+        }
+
+        micBtn.addEventListener('click', ()=> {
+            if(isRecording) stopRecognition();
+            else startRecognition();
+        });
+
+        usernameInput.addEventListener('keydown', (e)=> {
+            if(e.key === 'Enter') joinRoom();
+        });
+
+        joinBtn.addEventListener('click', joinRoom);
+        demoBtn.addEventListener('click', ()=> {
+            usernameInput.value = 'DemoUser';
+            joinRoom();
+        });
+
+        function sanitizeName(n){
+            return n.replace(/[^a-zA-Z0-9 ]/g,'').slice(0,24);
+        }
+
+        function joinRoom(){
+            const rawName = sanitizeName(usernameInput.value || 'Guest');
+            if(!rawName){
+                alert('Please enter a username');
+                return;
+            }
+            userName = rawName;
+
+            const hostname = window.location.hostname;
+            roomCode = btoa(hostname).replace(/[^a-zA-Z0-9]/g, '').slice(0, 16);
+
+            sidebarUserInfo.textContent = `${userName}@${hostname}`;
+            joinModal.style.display = 'none';
+
+            connectToRoom();
+            try{
+                localStorage.setItem('ln-username', usernameInput.value);
+            }catch(e){}
+        }
+
+        document.addEventListener('click', (e) => {
+            const chatItem = e.target.closest('.chat-item');
+            if (chatItem) {
+                const chatType = chatItem.getAttribute('data-chat-type');
+                const chatId = chatItem.getAttribute('data-chat-id');
+                switchToChat(chatType, chatId);
+            }
+        });
+
+        window.addEventListener('load', ()=>{
+            try{
+                const stored = localStorage.getItem('ln-username');
+                if(stored) usernameInput.value = stored;
+            }catch(e){}
+
+            addMessageToDOM({
+                id: uid(),
+                name:'System',
+                text: 'Welcome to ZXS CHAT! Click on users in the sidebar to start direct messages. Right-click messages to react.',
+                timestamp: new Date().toISOString(),
+                type: 'system'
+            }, false);
+        });
+
+        document.getElementById('btnInvite').addEventListener('click', ()=>{
+            const url = window.location.href;
+            navigator.clipboard?.writeText(url).then(()=> showTransient('Invite link copied!'));
+        });
+
+        document.getElementById('btnLeave').addEventListener('click', ()=> {
+            if(confirm('Leave the chat?')) location.reload();
+        });
+    </script>
+</body>
+</html>
