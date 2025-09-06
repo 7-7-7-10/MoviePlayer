@@ -749,7 +749,7 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
   position: fixed;
   left: 0; top: 0;
   width: 100vw; height: 100vh;
-  background: rgba(24,12,4,0.95);
+  background: rgba(24,12,4,0.97);
   z-index: 99999;
   align-items: center;
   justify-content: center;
@@ -783,19 +783,20 @@ body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
   text-shadow: 0 0 12px #ff9100, 0 0 32px #ff6f00;
 }
 
-body.theme-blue .loader-modal { background: rgba(10,24,60,0.95);}
+/* Theme overrides */
+body.theme-blue .loader-modal { background: rgba(10,24,60,0.96);}
 body.theme-blue .loader-animation { border-color: #2196f3; border-top: 8px solid #1565c0;}
 body.theme-blue .loader-title { color: #2196f3; text-shadow: 0 0 12px #2196f3, 0 0 32px #1565c0;}
 
-body.theme-red .loader-modal { background: rgba(44,10,10,0.95);}
+body.theme-red .loader-modal { background: rgba(44,10,10,0.96);}
 body.theme-red .loader-animation { border-color: #e53935; border-top: 8px solid #b71c1c;}
 body.theme-red .loader-title { color: #e53935; text-shadow: 0 0 12px #e53935, 0 0 32px #b71c1c;}
 
-body.theme-green .loader-modal { background: rgba(10,44,24,0.95);}
+body.theme-green .loader-modal { background: rgba(10,44,24,0.96);}
 body.theme-green .loader-animation { border-color: #34c759; border-top: 8px solid #145c26;}
 body.theme-green .loader-title { color: #34c759; text-shadow: 0 0 12px #34c759, 0 0 32px #145c26;}
 
-body.theme-void .loader-modal { background: rgba(32,32,32,0.96);}
+body.theme-void .loader-modal { background: rgba(32,32,32,0.98);}
 body.theme-void .loader-animation { border-color: #666; border-top: 8px solid #222;}
 body.theme-void .loader-title { color: #eaeaea; text-shadow: 0 0 12px #666, 0 0 32px #222;}
 
@@ -847,9 +848,10 @@ body.theme-midnight .loader-title { color: #e0e0e0; text-shadow: 0 0 12px #fff, 
     </div>
 
   </div>
-  <div id="loaderModal" class="loader-modal">
+ <div id="loaderModal" class="loader-modal">
   <div class="loader-animation"></div>
   <div id="loaderTitle" class="loader-title">Loading...</div>
+</div>
 </div>
   <!-- Modal Player -->
   <div id="playerModal">
@@ -861,7 +863,7 @@ body.theme-midnight .loader-title { color: #e0e0e0; text-shadow: 0 0 12px #fff, 
   </div>
 
 <script>
-  function openModal(url, title) {
+function openModal(url, title) {
   const loader = document.getElementById('loaderModal');
   const loaderTitle = document.getElementById('loaderTitle');
   const modal = document.getElementById('playerModal');
@@ -873,13 +875,13 @@ body.theme-midnight .loader-title { color: #e0e0e0; text-shadow: 0 0 12px #fff, 
   modal.classList.remove('show');
   frame.src = "";
 
-  // Load iframe, hide loader when ready
-  frame.onload = function() {
+  // Wait 2 seconds, then show iframe
+  setTimeout(() => {
     loader.classList.remove('show');
     modal.classList.add('show');
-    frame.onload = null; // Remove handler
-  };
-  frame.src = url;
+    frame.src = url;
+  }, 2000);
+}
 }
   function showLoadTimeStat() {
   // Use the browser Performance API for accurate results
