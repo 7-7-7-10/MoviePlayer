@@ -732,6 +732,18 @@ body.theme-red #perfStatsPanel { color: #e53935; }
 body.theme-green #perfStatsPanel { color: #34c759; }
 body.theme-void #perfStatsPanel { color: #eaeaea; }
 body.theme-midnight #perfStatsPanel { color: #e0e0e0; background: #181818; }
+    /* OVERRIDE: Make the Midnight theme button black */
+.theme-btn.midnight {
+  background: #111 !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* When active, add a light outline */
+.theme-btn.midnight.active {
+  outline: 2px solid #fffbe6 !important;
+}
   </style>
 </head>
 <body class="theme-orange">
