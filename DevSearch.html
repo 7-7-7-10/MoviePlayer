@@ -217,6 +217,32 @@
       cursor: pointer;
       animation: borderFade 2.2s;
     }
+    .stats-panel {
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 18px 30px;
+  margin-bottom: 22px;
+  box-shadow: 0 0 18px #ff910080;
+  color: #ff9100;
+  font-size: 1.15rem;
+  text-align: center;
+  transition: background 0.3s, color 0.3s;
+}
+body.theme-blue .stats-panel { color: #2196f3; }
+body.theme-red .stats-panel { color: #e53935; }
+body.theme-green .stats-panel { color: #34c759; }
+body.theme-void .stats-panel { color: #eaeaea; }
+.stats-panel h2 {
+  margin-bottom: 14px;
+  font-size: 1.35rem;
+  font-weight: bold;
+}
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 1.08rem;
+}
     body.theme-blue .search-item {
       background: rgba(10,30,60,0.9);
       border-color: #2196f3;
@@ -582,6 +608,18 @@ body.theme-void button:hover {
   <div id="results" class="search-results"></div>
   <div id="lastPlayingBlock" class="last-playing-block" style="display:none;"></div>
   <div id="recentSearchesBlock" class="recent-searches-block" style="display:none;"></div>
+   <div id="statsPanel" class="stats-panel">
+  <h2>Statistics</h2>
+  <div class="stats-row">
+    <span>Movies Watched:</span> <span id="statsMoviesWatched">0</span>
+  </div>
+  <div class="stats-row">
+    <span>TV Episodes Watched:</span> <span id="statsEpisodesWatched">0</span>
+  </div>
+  <div class="stats-row">
+    <span>Total Time Spent:</span> <span id="statsTimeSpent">0h 0m</span>
+  </div>
+</div>
 </div>
  
     </div>
@@ -1000,6 +1038,68 @@ function setTheme(theme) {
       if (e.target === this) closeModal();
     });
   });
+  function getStats() {
+  return JSON.parse(localStorage.getItem('playerStats') || '{"movies":0,"episodes":0,"minutes":0}');
+}
+function saveStats(stats) {
+  localStorage.setItem('playerStats', JSON.stringify(stats));
+}
+function updateStatsPanel() {
+  const stats = getStats();
+  document.getElementById('statsMoviesWatched').textContent = stats.movies;
+  document.getElementById('statsEpisodesWatched').textContent = stats.episodes;
+  const hrs = Math.floor(stats.minutes / 60);
+  const mins = stats.minutes % 60;
+  document.getElementById('statsTimeSpent').textContent = `${hrs}h ${mins}m`;
+}
+
+// Call updateStatsPanel on page load
+window.addEventListener('DOMContentLoaded', function() {
+  updateStatsPanel();
+});
+
+// Update stats when watching a movie or episode
+function playMovie(encItem) {
+  const item = JSON.parse(decodeURIComponent(encItem));
+  setLastPlaying({...item, type: "Movie"});
+  openModal(getMovieUrl(item));
+  updateLastPlayingBlock();
+
+  // Update stats
+  let stats = getStats();
+  stats.movies += 1;
+  stats.minutes += 120; // Assume 2 hours/movie
+  saveStats(stats);
+  updateStatsPanel();
+}
+
+function askTvPlay(encItem) {
+  const item = JSON.parse(decodeURIComponent(encItem));
+  let season = prompt("Enter season number:", "1");
+  if (season === null) return;
+  season = season.replace(/[^0-9]/g, "");
+  if (!season || +season < 1) {
+    alert("Invalid season.");
+    return;
+  }
+  let episode = prompt("Enter episode number:", "1");
+  if (episode === null) return;
+  episode = episode.replace(/[^0-9]/g, "");
+  if (!episode || +episode < 1) {
+    alert("Invalid episode.");
+    return;
+  }
+  setLastPlaying({...item, type: "TV", season: season, episode: episode});
+  openModal(getTvUrl(item, season, episode));
+  updateLastPlayingBlock();
+
+  // Update stats
+  let stats = getStats();
+  stats.episodes += 1;
+  stats.minutes += 45; // Estimate 45min/episode
+  saveStats(stats);
+  updateStatsPanel();
+}
 </script>
 </body>
 </html>
