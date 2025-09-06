@@ -616,6 +616,106 @@ body.theme-void button:hover {
   border: 2px solid #222;
   color: #fff;
 }
+    body.theme-midnight {
+  background: #121212;
+  color: #e0e0e0;
+}
+body.theme-midnight h1,
+body.theme-midnight .catchphrase,
+body.theme-midnight .recent-title,
+body.theme-midnight .last-playing-title,
+body.theme-midnight .search-title,
+body.theme-midnight .stats-panel {
+  color: #e0e0e0 !important;
+  text-shadow: none;
+}
+
+body.theme-midnight .container,
+body.theme-midnight .stats-panel,
+body.theme-midnight .search-item,
+body.theme-midnight #playerModal {
+  background: #181818 !important;
+  border-color: #222 !important;
+  box-shadow: none !important;
+}
+
+body.theme-midnight .theme-switcher,
+body.theme-midnight .input-container,
+body.theme-midnight .recent-searches-block,
+body.theme-midnight .last-playing-block {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+body.theme-midnight .theme-btn {
+  background: #222 !important;
+  color: #e0e0e0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+body.theme-midnight .theme-btn.midnight.active {
+  outline: 2px solid #e0e0e0 !important;
+}
+
+body.theme-midnight input,
+body.theme-midnight select,
+body.theme-midnight button,
+body.theme-midnight #playerBtnRow button {
+  background: #222 !important;
+  color: #e0e0e0 !important;
+  border: 1.5px solid #333 !important;
+  box-shadow: none !important;
+  border-radius: 40px !important;
+}
+
+body.theme-midnight #playerBtnRow {
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+body.theme-midnight #playerModal {
+  background: #121212ee !important;
+}
+
+body.theme-midnight #playerFrame {
+  border: 2px solid #222 !important;
+  box-shadow: none !important;
+  background: #000 !important;
+}
+
+body.theme-midnight .search-item.selected {
+  background: #222 !important;
+  border: 2px solid #e0e0e0 !important;
+  color: #e0e0e0 !important;
+  box-shadow: none !important;
+}
+
+body.theme-midnight .stats-panel {
+  background: #181818 !important;
+  box-shadow: none !important;
+}
+
+body.theme-midnight .recent-list li {
+  background: #222 !important;
+  color: #e0e0e0 !important;
+}
+body.theme-midnight .recent-list li:hover {
+  background: #e0e0e0 !important;
+  color: #222 !important;
+}
+
+body.theme-midnight .search-type,
+body.theme-midnight .id-info {
+  color: #bdbdbd !important;
+}
+
+body.theme-midnight #miniPlayerDock {
+  background: #181818 !important;
+  box-shadow: none !important;
+  border: 1px solid #222 !important;
+}
   </style>
 </head>
 <body class="theme-orange">
@@ -629,6 +729,7 @@ body.theme-void button:hover {
     <button class="theme-btn red" onclick="setTheme('red')">Red</button>
     <button class="theme-btn green" onclick="setTheme('green')">Emerald</button>
     <button class="theme-btn void" onclick="setTheme('void')">Void</button>
+    <button class="theme-btn midnight" onclick="setTheme('midnight')">Midnight</button>
   </div>
   <div class="input-container">
     <input id="searchQuery" type="text" placeholder="Search by title..." />
@@ -835,6 +936,9 @@ function setTheme(theme) {
   } else if (theme === 'void') {
     document.getElementById('main-title').textContent = 'Void | MOVIES';
     document.getElementById('main-header').textContent = 'Void';
+  } else if (theme === 'midnight') {
+    document.getElementById('main-title').textContent = 'Midnight | MOVIES';
+    document.getElementById('main-header').textContent = 'Midnight';
   } else {
     document.getElementById('main-title').textContent = 'Phoenix | MOVIES';
     document.getElementById('main-header').textContent = 'Phoenix';
