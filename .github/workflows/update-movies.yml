@@ -1,0 +1,24 @@
+name: Update Movies.json from embed.su
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # every day at 5:00 UTC
+  workflow_dispatch:     # allow manual trigger
+
+jobs:
+  update-movies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download latest movie.json
+        run: curl -L https://embed.su/list/movie.json -o Movies.json
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add Movies.json
+          git diff --cached --quiet || git commit -m "Auto-update Movies.json from embed.su"
+          git push
