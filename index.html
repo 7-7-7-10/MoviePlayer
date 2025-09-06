@@ -969,6 +969,24 @@ body.theme-green::before {
 </div>
 
 <script>
+  document.addEventListener('keydown', function(e) {
+  if (e.key === "Escape") {
+    const popup = document.getElementById('phoenixChatPopup');
+    if (popup.style.display === 'block') {
+      if (document.fullscreenElement === popup) {
+        document.exitFullscreen();
+        document.addEventListener('fullscreenchange', function handler() {
+          if (!document.fullscreenElement) {
+            popup.style.display = 'none';
+            document.removeEventListener('fullscreenchange', handler);
+          }
+        });
+      } else {
+        popup.style.display = 'none';
+      }
+    }
+  }
+});
     document.getElementById('phoenixChatBtn').onclick = function() {
     document.getElementById('phoenixChatPopup').style.display = 'block';
   };
