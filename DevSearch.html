@@ -785,6 +785,21 @@ body.theme-green::before {
                     linear-gradient(180deg, rgba(52,199,89,0.09) 1px, transparent 1px);
   background-size: 50px 50px;
   */
+  .aboutblank-btn, .fullscreen-btn {
+  margin-left: 8px;
+  padding: 6px 10px;
+  font-size: 1.15em;
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.aboutblank-btn:hover, .fullscreen-btn:hover {
+  background: #4caf50;
+  color: #fff;
+}
 }
   </style>
 </head>
@@ -843,11 +858,41 @@ body.theme-green::before {
     <iframe id="playerFrame" allowfullscreen frameborder="0"></iframe>
    <div id="playerBtnRow" style="display:flex; gap:16px; justify-content:center;">
   <button id="closeBtn" onclick="closeModal()">✕ Close</button>
-  <button id="minimizeBtn" title="Minimize player">Minimize</button>
+  <button id="minimizeBtn" title="Minimize player">🗗 Minimize</button>
+  <button class="aboutblank-btn" title="Open in about:blank">🗗</button>
+  <button class="fullscreen-btn" title="Fullscreen player">⛶</button>
 </div>
   </div>
 
 <script>
+  document.querySelector('.aboutblank-btn').onclick = function() {
+  const iframe = document.getElementById('moviePlayerIframe');
+  if (!iframe) return;
+  const src = iframe.src;
+  // Open about:blank and inject iframe
+  const popup = window.open('about:blank', '_blank');
+  if (popup) {
+    popup.document.write(`
+      <body style="margin:0;background:#000;">
+        <iframe src="${src}" style="width:100vw;height:100vh;border:none;background:#000;" allowfullscreen></iframe>
+      </body>
+    `);
+    popup.document.close();
+  }
+};
+
+document.querySelector('.fullscreen-btn').onclick = function() {
+  const iframe = document.getElementById('moviePlayerIframe');
+  if (iframe && iframe.requestFullscreen) {
+    iframe.requestFullscreen();
+  } else if (iframe && iframe.webkitRequestFullscreen) {
+    iframe.webkitRequestFullscreen();
+  } else if (iframe && iframe.mozRequestFullScreen) {
+    iframe.mozRequestFullScreen();
+  } else if (iframe && iframe.msRequestFullscreen) {
+    iframe.msRequestFullscreen();
+  }
+};
   // Save theme selection
 function setTheme(theme) {
   document.body.className = 'theme-' + theme;
