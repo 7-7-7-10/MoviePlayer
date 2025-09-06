@@ -107,6 +107,69 @@
     @keyframes borderFade {
       0% { border-color: #000; }
       100% { border-color: #ff9100; }
+      #playerBtnRow button {
+  min-width: 130px;
+  padding: 10px 0;
+  border-radius: 40px;         /* Makes both buttons pill-shaped */
+  font-size: 1.17rem;
+  font-weight: bold;
+  box-shadow: 0 0 15px #ff910030;
+  border: none;
+  background: linear-gradient(135deg, #ff9100 30%, #ff3d00 100%);
+  color: #fffbe6;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  margin: 0;                  /* Remove extra margins */
+  outline: none;
+}
+#playerBtnRow button:hover {
+  background: linear-gradient(135deg, #ff3d00, #ff9100);
+  color: #fff;
+  border: 2px solid #ff3d00;
+  transform: scale(1.08);
+}
+
+body.theme-blue #playerBtnRow button {
+  background: linear-gradient(135deg, #2196f3 30%, #1565c0 100%);
+  color: #e3f2fd;
+  box-shadow: 0 0 15px #2196f330;
+}
+body.theme-blue #playerBtnRow button:hover {
+  background: linear-gradient(135deg, #1565c0 0%, #2196f3 100%);
+  border: 2px solid #1976d2;
+  color: #fff;
+}
+
+body.theme-red #playerBtnRow button {
+  background: linear-gradient(135deg, #e53935 30%, #b71c1c 100%);
+  color: #ffebee;
+  box-shadow: 0 0 15px #b71c1ca0;
+}
+body.theme-red #playerBtnRow button:hover {
+  background: linear-gradient(135deg, #b71c1c 0%, #e53935 100%);
+  border: 2px solid #b71c1c;
+  color: #fff;
+}
+
+body.theme-green #playerBtnRow button {
+  background: linear-gradient(135deg, #34c759 30%, #145c26 100%);
+  color: #eaffea;
+}
+body.theme-green #playerBtnRow button:hover {
+  background: linear-gradient(135deg, #145c26 0%, #34c759 100%);
+  border: 2px solid #145c26;
+  color: #fff;
+}
+
+body.theme-void #playerBtnRow button {
+  background: linear-gradient(135deg, #444 30%, #222 100%);
+  color: #eaeaea;
+}
+body.theme-void #playerBtnRow button:hover {
+  background: linear-gradient(135deg, #222 0%, #444 100%);
+  border: 2px solid #222;
+  color: #fff;
+}
     }
     .container:hover {
       transform: scale(1.01);
@@ -445,41 +508,7 @@ body.theme-void .stats-panel { color: #eaeaea; }
     body.theme-red #playerFrame {
       border-color: #e53935; box-shadow: 0 0 40px #e53935;
     }
-    #closeBtn {
-      margin: 20px 0 0 0;
-      padding: 10px 30px;
-      border-radius: 40px;
-      border: none;
-      background: linear-gradient(135deg, #ff9100, #ff3d00);
-      color: #fffbe6;
-      font-weight: bold;
-      font-size: 1.18rem;
-      box-shadow: 0 0 20px #ff6f00a0;
-      cursor: pointer;
-      transition: all 0.4s;
-      animation: borderFade 1.5s;
-    }
-    body.theme-blue #closeBtn {
-      background: linear-gradient(135deg, #2196f3, #1565c0);
-      color: #e3f2fd;
-      box-shadow: 0 0 20px #2196f3a0;
-    }
-    body.theme-red #closeBtn {
-      background: linear-gradient(135deg, #e53935, #b71c1c);
-      color: #ffebee;
-      box-shadow: 0 0 20px #b71c1ca0;
-    }
-    #closeBtn:hover {
-      background: linear-gradient(135deg, #ff3d00, #ff9100);
-      color: #fff;
-    }
-    body.theme-blue #closeBtn:hover {
-      background: linear-gradient(135deg, #1565c0, #2196f3);
-      color: #fff;
-    }
-    body.theme-red #closeBtn:hover {
-      background: linear-gradient(135deg, #b71c1c, #e53935);
-      color: #fff;
+   
     }
     body.theme-green {
   background: linear-gradient(135deg, #072a07, #145c26 40%, #34c759 100%);
