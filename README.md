@@ -108,7 +108,7 @@ See [GitHub contributors](https://github.com/7-7-7-10/MoviePlayer/graphs/contrib
 
 ## License
 
-This project is open source and available under the MIT License.  
+This project is open source and available under the MIT License.  Please Star if you Fork.
 See [`LICENSE`](./LICENSE) for details.
 
 ---
