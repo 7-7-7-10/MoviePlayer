@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>404 | Page Not Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Orbitron for 404, Bebas Neue for subtitle -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Bebas+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #111 0%, #222 70%, #333 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+    /* Animated background lines */
+    .lines {
+      position: fixed;
+      top:0; left:0; width:100vw; height:100vh; z-index:0; pointer-events:none;
+      background: repeating-linear-gradient(120deg, #222 0px, #222 1px, transparent 2px, transparent 40px), 
+                  repeating-linear-gradient(240deg, #222 0px, #222 1px, transparent 2px, transparent 40px);
+      opacity: 0.18;
+      animation: moveLines 12s linear infinite;
+    }
+    @keyframes moveLines {
+      from { background-position: 0 0, 0 0; }
+      to { background-position: 120px 60px, -120px -60px; }
+    }
+    /* Center panel (glass effect) */
+    .panel {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(90vw, 480px);
+      background: rgba(32,32,32,0.72);
+      border-radius: 28px;
+      box-shadow: 0 0 0 3px #fff2, 0 0 38px #000a, 0 0 0 8px #fff1 inset;
+      backdrop-filter: blur(8px) brightness(1.08);
+      border: 2.3px solid #fff5;
+      border-top: 2.3px solid #fff8;
+      border-bottom: 2.3px solid #8885;
+      padding: 2.5em 2em 2em 2em;
+      z-index: 2;
+      text-align: center;
+      overflow: visible;
+    }
+    .panel:before {
+      content: "";
+      display: block;
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      border: 2px solid #fff2;
+      pointer-events: none;
+      z-index: 1;
+      filter: blur(1.5px);
+    }
+    /* Animated 404 */
+    .code {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(80px, 13vw, 200px);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: #fff;
+      text-shadow: 0 0 44px #fff5, 0 0 2px #fff, 0 0 30px #222a;
+      margin-bottom: 0.22em;
+      filter: drop-shadow(0 0 6px #fff8);
+      animation: pulse404 1.7s infinite alternate;
+      position: relative;
+      z-index: 2;
+      user-select: none;
+    }
+    @keyframes pulse404 {
+      0% { text-shadow: 0 0 44px #fff8, 0 0 2px #fff; }
+      100% { text-shadow: 0 0 70px #fff, 0 0 8px #fff; }
+    }
+    .notfound {
+      font-family: 'Bebas Neue', 'Inter', Arial, sans-serif;
+      font-size: clamp(30px, 3vw, 64px);
+      font-weight: 400;
+      color: #f6f6f6;
+      margin-bottom: 1.2em;
+      letter-spacing: 0.11em;
+      text-shadow: 0 0 18px #fff2, 0 0 2px #fff;
+      user-select: none;
+    }
+    /* Home button */
+    .home-btn {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(18px, 1.3vw, 32px);
+      font-weight: 700;
+      background: transparent;
+      color: #fff;
+      border: 2.5px solid #fff;
+      border-radius: 32px;
+      box-shadow: 0 0 16px #fff2, 0 0 2px #fff;
+      padding: 0.8em 3.1em;
+      cursor: pointer;
+      transition: 
+        background 0.25s,
+        color 0.25s,
+        border 0.25s,
+        transform 0.22s,
+        box-shadow 0.28s;
+      letter-spacing: 0.12em;
+      outline: none;
+      margin-bottom: 2em;
+      text-decoration: none;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      border-image: linear-gradient(90deg, #fff, #aaa, #fff) 1;
+    }
+    .home-btn:before {
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:32px;
+      background: linear-gradient(90deg, #fff2 0%, #8883 100%);
+      opacity:0;
+      transition:opacity 0.22s;
+      z-index: -1;
+    }
+    .home-btn:hover {
+      background: #fff;
+      color: #222;
+      border-color: #fff;
+      transform: scale(1.06);
+      box-shadow: 0 0 32px #fff8;
+    }
+    .home-btn:hover:before {
+      opacity:0.09;
+    }
+    /* Little accent lines under the code */
+    .accent-lines {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 1.5em;
+      z-index: 2;
+      position: relative;
+      pointer-events: none;
+    }
+    .accent-line {
+      background: linear-gradient(90deg, #fff, #222 80%);
+      height: 3.7px;
+      width: 38px;
+      border-radius: 2px;
+      opacity: 0.5;
+      filter: blur(0.5px);
+      animation: accentAnim 2.2s infinite alternate;
+    }
+    .accent-line:nth-child(2) {
+      background: linear-gradient(90deg, #222, #fff 80%);
+      animation-delay: 1.1s;
+    }
+    @keyframes accentAnim {
+      0% { opacity:0.5; width:38px; }
+      100% { opacity:0.9; width:54px;}
+    }
+    /* Responsive tweaks */
+    @media (max-width: 500px) {
+      .panel { padding: 1.3em 0.6em; width: 98vw;}
+      .home-btn { padding: 1em 1.7em;}
+    }
+  </style>
+</head>
+<body>
+  <div class="lines"></div>
+  <div class="panel">
+    <div class="code">404</div>
+    <div class="accent-lines">
+      <div class="accent-line"></div>
+      <div class="accent-line"></div>
+    </div>
+    <div class="notfound">Page Not Found</div>
+    <a href="https://7-7-7-10.github.io/MoviePlayer/DevSearch.html" class="home-btn">Home Page</a>
+  </div>
+</body>
+</html>
